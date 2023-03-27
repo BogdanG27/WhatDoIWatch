@@ -33,8 +33,8 @@ public class UserService : IUserService
     {
         var result = await _repository.GetAsync(new UserProjectionSpec(id), cancellationToken); // Get a user using a specification on the repository.
 
-        return result != null ? 
-            ServiceResponse<UserDTO>.ForSuccess(result) : 
+        return result != null ?
+            ServiceResponse<UserDTO>.ForSuccess(result) :
             ServiceResponse<UserDTO>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
     }
 
@@ -74,7 +74,7 @@ public class UserService : IUserService
         });
     }
 
-    public async Task<ServiceResponse<int>> GetUserCount(CancellationToken cancellationToken = default) => 
+    public async Task<ServiceResponse<int>> GetUserCount(CancellationToken cancellationToken = default) =>
         ServiceResponse<int>.ForSuccess(await _repository.GetCountAsync<User>(cancellationToken)); // Get the count of all user entities in the database.
 
     public async Task<ServiceResponse> AddUser(UserAddDTO user, UserDTO? requestingUser, CancellationToken cancellationToken = default)
@@ -111,7 +111,7 @@ public class UserService : IUserService
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can update the user!", ErrorCodes.CannotUpdate));
         }
 
-        var entity = await _repository.GetAsync(new UserSpec(user.Id), cancellationToken); 
+        var entity = await _repository.GetAsync(new UserSpec(user.Id), cancellationToken);
 
         if (entity != null) // Verify if the user is not found, you cannot update an non-existing entity.
         {

@@ -1,8 +1,11 @@
 namespace MobyLabWebProgramming.Core.Entities;
 
-class Episode : BaseEntity
+public class Episode : BaseEntity
 {
-    public String Name { get; set; } = default!;
-    public Int16 DurationInMinutes { get; set; } = default!;
-    public Int16 SeasonNumber { get; set; } = default!;
+    public int SeasonNumber { get; set; } = default!;
+    public int EpisodeNumber { get; set; } = default!;
+    public TimeSpan Duration { get; set; } = default!;
+    public Guid SeasonId { get; set; } = default!;
+    public Season Season { get; set; } = default!;
+
 }

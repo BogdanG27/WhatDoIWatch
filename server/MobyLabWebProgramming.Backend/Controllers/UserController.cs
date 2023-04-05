@@ -32,8 +32,8 @@ public class UserController : AuthorizedController // Here we use the Authorized
     {
         var currentUser = await GetCurrentUser();
 
-        return currentUser.Result != null ? 
-            this.FromServiceResponse(await UserService.GetUser(id)) : 
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await UserService.GetUser(id)) :
             this.ErrorMessageResult<UserDTO>(currentUser.Error);
     }
 
@@ -62,6 +62,7 @@ public class UserController : AuthorizedController // Here we use the Authorized
     public async Task<ActionResult<RequestResponse>> Add([FromBody] UserAddDTO user)
     {
         var currentUser = await GetCurrentUser();
+        user.Password = PasswordUtils.HashPassword(user.Password);
 
         return currentUser.Result != null ?
             this.FromServiceResponse(await UserService.AddUser(user, currentUser.Result)) :

@@ -15,8 +15,8 @@ public static class ControllerExtensions
     /// </summary>
     public static ActionResult<RequestResponse> ErrorMessageResult(this ControllerBase controller, ServerException serverException) =>
         controller.StatusCode((int)serverException.Status, RequestResponse.FromError(ErrorMessage.FromException(serverException))); // The StatusCode method of the controller base will
-                                                                                                                                            // set the given HTTP status code in the response and will serialize
-                                                                                                                                            // the response object.
+                                                                                                                                    // set the given HTTP status code in the response and will serialize
+                                                                                                                                    // the response object.
 
     public static ActionResult<RequestResponse> ErrorMessageResult(this ControllerBase controller, ErrorMessage? errorMessage = default) =>
         controller.StatusCode((int)(errorMessage?.Status ?? HttpStatusCode.InternalServerError), RequestResponse.FromError(errorMessage));
@@ -26,8 +26,8 @@ public static class ControllerExtensions
 
     public static ActionResult<RequestResponse> FromServiceResponse(this ControllerBase controller, ServiceResponse response) =>
         response.Error == null ? controller.Ok(RequestResponse.OkRequestResponse) : controller.ErrorMessageResult(response.Error); // The Ok method of the controller base will set the
-                                                                                                                                      // HTTP status code in the response to 200 Ok and will
-                                                                                                                                      // serialize the response object.
+                                                                                                                                   // HTTP status code in the response to 200 Ok and will
+                                                                                                                                   // serialize the response object.
 
     public static ActionResult<RequestResponse<T>> FromServiceResponse<T>(this ControllerBase controller, ServiceResponse<T> response) =>
         response.Error == null ? controller.Ok(RequestResponse<T>.FromServiceResponse(response)) : controller.ErrorMessageResult<T>(response.Error);

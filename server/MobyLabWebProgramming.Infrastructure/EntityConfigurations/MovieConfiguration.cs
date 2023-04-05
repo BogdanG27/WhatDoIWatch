@@ -13,25 +13,50 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 {
     public void Configure(EntityTypeBuilder<Movie> builder)
     {
-        builder.Property(e => e.Id) // This specifies which property is configured.
-            .IsRequired(); // Here it is specified if the property is required, meaning it cannot be null in the database.
-        builder.HasKey(x => x.Id); // Here it is specifies that the property Id is the primary key.
-        builder.Property(e => e.Name)
-            .HasMaxLength(255) // This specifies the maximum length for varchar type in the database.
+        builder.Property(m => m.Name)
+            .HasMaxLength(100)
             .IsRequired();
-        // builder.Property(e => e.)
-        //     .HasMaxLength(255)
-        //     .IsRequired();
-        // builder.HasAlternateKey(e => e.Email); // Here it is specifies that the property Email is a unique key.
-        // builder.Property(e => e.Password)
-        //     .HasMaxLength(255)
-        //     .IsRequired();
-        // builder.Property(e => e.Role)
-        //     .HasMaxLength(255)
-        //     .IsRequired();
-        // builder.Property(e => e.CreatedAt)
-        //     .IsRequired();
-        // builder.Property(e => e.UpdatedAt)
-        //     .IsRequired();
+
+        builder.Property(m => m.Description)
+            .HasMaxLength(1000)
+            .IsRequired();
+
+        builder.Property(m => m.ReleaseDate)
+            .IsRequired();
+
+        builder.Property(m => m.Duration)
+            .HasMaxLength(20)
+            .IsRequired();
+
+        builder.Property(m => m.Language)
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.Property(m => m.Genre)
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.Property(m => m.ImageUrl)
+        .HasMaxLength(255)
+        .IsRequired();
+
+        builder.Property(m => m.Rating)
+            .HasColumnType("decimal(3,2)")
+            .IsRequired();
+
+        builder.Property(m => m.NumberOfRatings)
+            .IsRequired();
+
+        builder.HasMany(m => m.StaffMembers)
+            .WithMany(a => a.Movies)
+            .UsingEntity(j => j.ToTable("MovieStaffMembers"));
+
+        builder.HasMany(m => m.Actors)
+            .WithMany(a => a.Movies)
+            .UsingEntity(j => j.ToTable("MovieActors"));
+
+        builder.HasMany(e => e.FavouriteUsers)
+            .WithMany(u => u.FavoriteMovies)
+            .UsingEntity(j => j.ToTable("UserMovies"));
     }
 }

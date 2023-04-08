@@ -20,7 +20,23 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
         Id = e.Id,
         Email = e.Email,
         Name = e.Name,
-        Role = e.Role
+        Role = e.Role,
+        FavouriteMovies = e.FavoriteMovies.Select(e => new MovieSimpleDTO
+        {
+            Id = e.Id,
+            ImageUrl = e.ImageUrl,
+            Name = e.Name,
+            NumberOfRatings = e.NumberOfRatings,
+            Rating = e.Rating,
+        }).ToList(),
+        FavouriteTvShows = e.FavoriteTvShows.Select(e => new TvShowSimpleDTO
+        {
+            Id = e.Id,
+            ImageUrl = e.ImageUrl,
+            Name = e.Name,
+            NumberOfRatings = e.NumberOfRatings,
+            Rating = e.Rating
+        }).ToList()
     };
 
     public UserProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
@@ -42,7 +58,9 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
 
         var searchExpr = $"%{search.Replace(" ", "%")}%";
 
-        Query.Where(e => EF.Functions.ILike(e.Name, searchExpr)); // This is an example on who database specific expressions can be used via C# expressions.
-                                                                                           // Note that this will be translated to the database something like "where user.Name ilike '%str%'".
+        Query
+            .Include(e => e.FavoriteMovies)
+            .Include(e => e.FavoriteTvShows)
+            .Where(e => EF.Functions.ILike(e.Name, searchExpr));
     }
 }

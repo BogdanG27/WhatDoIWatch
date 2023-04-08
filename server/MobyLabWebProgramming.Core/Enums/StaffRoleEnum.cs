@@ -11,8 +11,9 @@ namespace MobyLabWebProgramming.Core.Enums;
 [JsonConverter(typeof(SmartEnumNameConverter<StaffTypeEnum, string>))]
 public sealed class StaffTypeEnum : SmartEnum<StaffTypeEnum, string>
 {
-    public static readonly StaffTypeEnum Director = new(nameof(Director), "Admin");
-    public static readonly StaffTypeEnum Writer = new(nameof(Writer), "Personnel");
+    public static readonly StaffTypeEnum Director = new(nameof(Director), "Director");
+    public static readonly StaffTypeEnum Writer = new(nameof(Writer), "Writer");
+    public static readonly StaffTypeEnum Producer = new(nameof(Producer), "Producer");
 
     private StaffTypeEnum(string name, string value) : base(name, value)
     {

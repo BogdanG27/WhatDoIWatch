@@ -6,15 +6,14 @@ using MobyLabWebProgramming.Core.Entities;
 
 namespace MobyLabWebProgramming.Core.Specifications;
 
-public sealed class MovieProjectionSpec : BaseSpec<MovieProjectionSpec, Movie, MovieDTO>
+public sealed class TvShowProjectionSpec : BaseSpec<TvShowProjectionSpec, TvShow, TvShowDTO>
 {
-    protected override Expression<Func<Movie, MovieDTO>> Spec => e => new()
+    protected override Expression<Func<TvShow, TvShowDTO>> Spec => e => new()
     {
         Id = e.Id,
         Description = e.Description,
         Genre = e.Genre,
         ImageUrl = e.ImageUrl,
-        Duration = e.Duration,
         Language = e.Language,
         Name = e.Name,
         NumberOfRatings = e.NumberOfRatings,
@@ -37,18 +36,26 @@ public sealed class MovieProjectionSpec : BaseSpec<MovieProjectionSpec, Movie, M
             Gender = a.Gender,
             LastName = a.LastName,
             Type = a.Type
+        }).ToList(),
+        Seasons = e.Seasons.Select(e => new SeasonDTO
+        {
+            Id = e.Id,
+            Name = e.Name,
+            Number = e.Number,
+            NumberOfEpisodes = e.NumberOfEpisodes,
+            TvShowId = e.TvShowId
         }).ToList()
     };
 
-    public MovieProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
+    public TvShowProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
     {
     }
 
-    public MovieProjectionSpec(Guid id) : base(id)
+    public TvShowProjectionSpec(Guid id) : base(id)
     {
     }
 
-    public MovieProjectionSpec(string? search)
+    public TvShowProjectionSpec(string? search)
     {
         search = !string.IsNullOrWhiteSpace(search) ? search.Trim() : null;
 
@@ -62,6 +69,7 @@ public sealed class MovieProjectionSpec : BaseSpec<MovieProjectionSpec, Movie, M
         Query
             .Include(e => e.Actors)
             .Include(e => e.StaffMembers)
+            .Include(e => e.Seasons)
             .Where(e => EF.Functions.ILike(e.Name, searchExpr));
     }
 }

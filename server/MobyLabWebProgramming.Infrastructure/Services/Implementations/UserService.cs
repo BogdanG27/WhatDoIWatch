@@ -64,7 +64,15 @@ public class UserService : IUserService
             Id = result.Id,
             Email = result.Email,
             Name = result.Name,
-            Role = result.Role
+            Role = result.Role,
+            FavouriteMovies = result.FavoriteMovies.Select(e => new MovieSimpleDTO
+            {
+                Id = e.Id,
+                ImageUrl = e.ImageUrl,
+                Name = e.Name,
+                NumberOfRatings = e.NumberOfRatings,
+                Rating = e.Rating,
+            }).ToList()
         };
 
         return ServiceResponse<LoginResponseDTO>.ForSuccess(new()
@@ -113,7 +121,7 @@ public class UserService : IUserService
 
         var entity = await _repository.GetAsync(new UserSpec(user.Id), cancellationToken);
 
-        if (entity != null) // Verify if the user is not found, you cannot update an non-existing entity.
+        if (entity != null)
         {
             entity.Name = user.Name ?? entity.Name;
             entity.Password = user.Password ?? entity.Password;
@@ -126,13 +134,81 @@ public class UserService : IUserService
 
     public async Task<ServiceResponse> DeleteUser(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin && requestingUser.Id != id) // Verify who can add the user, you can change this however you se fit.
+        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin) // Verify who can add the user, you can change this however you se fit.
         {
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can delete the user!", ErrorCodes.CannotDelete));
         }
 
         await _repository.DeleteAsync<User>(id, cancellationToken); // Delete the entity.
 
+        return ServiceResponse.ForSuccess();
+    }
+
+    public async Task<ServiceResponse> ToggleFavouriteMovie(Guid movieId, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    {
+        if (requestingUser == null)
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Can't add movie to favourites! User was not found", ErrorCodes.NotFound));
+        }
+        User? entity = await _repository.GetAsync(new UserSpec(requestingUser.Id), cancellationToken);
+        if (entity != null)
+        {
+            Movie? movie = await _repository.GetAsync(new MovieSpec(movieId), cancellationToken);
+
+            if (movie == null)
+            {
+                return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Movie not found", ErrorCodes.NotFound));
+            }
+
+            if (entity.FavoriteMovies == null)
+            {
+                entity.FavoriteMovies = new List<Movie>();
+            }
+
+            if (entity.FavoriteMovies.Contains(movie))
+            {
+                entity.FavoriteMovies.Remove(movie);
+            }
+            else
+            {
+                entity.FavoriteMovies.Add(movie);
+            }
+            await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
+        }
+        return ServiceResponse.ForSuccess();
+    }
+
+    public async Task<ServiceResponse> ToggleFavouriteTvShow(Guid tvShowId, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    {
+        if (requestingUser == null)
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Can't add tv show to favourites! User was not found", ErrorCodes.NotFound));
+        }
+        User? entity = await _repository.GetAsync(new UserSpec(requestingUser.Id), cancellationToken);
+        if (entity != null)
+        {
+            TvShow? tvShow = await _repository.GetAsync(new TvShowSpec(tvShowId), cancellationToken);
+
+            if (tvShow == null)
+            {
+                return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Tv show not found", ErrorCodes.NotFound));
+            }
+
+            if (entity.FavoriteTvShows == null)
+            {
+                entity.FavoriteTvShows = new List<TvShow>();
+            }
+
+            if (entity.FavoriteTvShows.Contains(tvShow))
+            {
+                entity.FavoriteTvShows.Remove(tvShow);
+            }
+            else
+            {
+                entity.FavoriteTvShows.Add(tvShow);
+            }
+            await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
+        }
         return ServiceResponse.ForSuccess();
     }
 }

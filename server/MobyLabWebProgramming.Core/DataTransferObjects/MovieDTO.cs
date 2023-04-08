@@ -12,4 +12,6 @@ public class MovieDTO
     public double Rating { get; set; } = default!;
     public int NumberOfRatings { get; set; } = default!;
     public string Duration { get; set; } = default!;
+    public ICollection<ActorDTO> Actors { get; set; } = default!;
+    public ICollection<StaffDTO> StaffMembers { get; set; } = default!;
 }

@@ -66,18 +66,18 @@ public class ActorService : IActorService
     {
         if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can update the user!", ErrorCodes.CannotUpdate));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can update the staff!", ErrorCodes.CannotUpdate));
         }
 
         var entity = await _repository.GetAsync(new ActorSpec(actor.Id), cancellationToken);
 
         if (entity != null)
         {
-            entity.LastName = actor.LastName;
-            entity.FirstName = actor.FirstName;
-            entity.Birthdate = actor.Birthdate;
-            entity.Gender = actor.Gender;
-            entity.PhotoUrl = actor.PhotoUrl;
+            entity.LastName = actor.LastName ?? entity.LastName;
+            entity.FirstName = actor.FirstName ?? entity.FirstName;
+            entity.Birthdate = actor.Birthdate ?? entity.Birthdate;
+            entity.Gender = actor.Gender ?? entity.Gender;
+            entity.PhotoUrl = actor.PhotoUrl ?? entity.PhotoUrl;
             await _repository.UpdateAsync(entity, cancellationToken);
         }
 

@@ -1,7 +1,8 @@
 namespace MobyLabWebProgramming.Core.DataTransferObjects;
 
-public record MovieUpdateDTO(
+public record TvShowUpdateDTO(
     Guid Id,
+    ICollection<SeasonAddSimpleDTO>? Seasons = null,
     string? Name = null,
     string? Description = null,
     DateTime? ReleaseDate = null,
@@ -10,7 +11,6 @@ public record MovieUpdateDTO(
     string? ImageUrl = null,
     double? Rating = null,
     int? NumberOfRatings = null,
-    string? Duration = null,
     ICollection<Guid>? ActorsIds = null,
     ICollection<Guid>? StaffMembersIds = null
 );

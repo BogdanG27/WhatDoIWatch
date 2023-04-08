@@ -86,10 +86,28 @@ public class UserController : AuthorizedController // Here we use the Authorized
             this.ErrorMessageResult(currentUser.Error);
     }
 
-    /// <summary>
-    /// This method implements the Delete operation (D from CRUD) on a user.
-    /// Note that in the HTTP RFC you cannot have a body for DELETE operations.
-    /// </summary>
+    [Authorize]
+    [HttpPut("{movieId:guid}")] // This attribute will make the controller respond to a HTTP DELETE request on the route /api/User/Delete/<some_guid>.
+    public async Task<ActionResult<RequestResponse>> ToggleMovieFavorite([FromRoute] Guid movieId) // The FromRoute attribute will bind the id from the route to this parameter.
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await UserService.ToggleFavouriteMovie(movieId, currentUser.Result)) :
+            this.ErrorMessageResult(currentUser.Error);
+    }
+
+    [Authorize]
+    [HttpPut("{tvShowId:guid}")] // This attribute will make the controller respond to a HTTP DELETE request on the route /api/User/Delete/<some_guid>.
+    public async Task<ActionResult<RequestResponse>> ToggleTvShowFavorite([FromRoute] Guid tvShowId) // The FromRoute attribute will bind the id from the route to this parameter.
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await UserService.ToggleFavouriteTvShow(tvShowId, currentUser.Result)) :
+            this.ErrorMessageResult(currentUser.Error);
+    }
+
     [Authorize]
     [HttpDelete("{id:guid}")] // This attribute will make the controller respond to a HTTP DELETE request on the route /api/User/Delete/<some_guid>.
     public async Task<ActionResult<RequestResponse>> Delete([FromRoute] Guid id) // The FromRoute attribute will bind the id from the route to this parameter.

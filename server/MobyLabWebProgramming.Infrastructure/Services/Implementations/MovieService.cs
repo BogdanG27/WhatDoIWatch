@@ -50,6 +50,36 @@ public class MovieService : IMovieService
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Movie already exists!", ErrorCodes.CannotAdd));
         }
 
+        var Actors = new List<Actor>();
+        var StaffMembers = new List<Staff>();
+
+        // if I added actors to the
+        if (movie.ActorsIds != null)
+        {
+            foreach (Guid id in movie.ActorsIds)
+            {
+                var actor = await _repository.GetAsync(new ActorSpec(id), cancellationToken);
+                if (actor == null)
+                {
+                    return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Bad actor id provided", ErrorCodes.NotFound));
+                }
+                Actors.Add(actor);
+            }
+        }
+
+        if (movie.StaffMembersIds != null)
+        {
+            foreach (Guid id in movie.StaffMembersIds)
+            {
+                var staffMember = await _repository.GetAsync(new StaffSpec(id), cancellationToken);
+                if (staffMember == null)
+                {
+                    return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Bad actor id provided", ErrorCodes.NotFound));
+                }
+                StaffMembers.Add(staffMember);
+            }
+        }
+
         await _repository.AddAsync(new Movie
         {
             Description = movie.Description,
@@ -61,11 +91,12 @@ public class MovieService : IMovieService
             ImageUrl = movie.ImageUrl,
             Rating = movie.Rating,
             NumberOfRatings = movie.NumberOfRatings,
+            Actors = Actors,
+            StaffMembers = StaffMembers
         });
 
         return ServiceResponse.ForSuccess();
     }
-
 
     public async Task<ServiceResponse> UpdateMovie(MovieUpdateDTO movie, UserDTO? requestingUser, CancellationToken cancellationToken)
     {
@@ -76,17 +107,49 @@ public class MovieService : IMovieService
 
         var entity = await _repository.GetAsync(new MovieSpec(movie.Id), cancellationToken);
 
+        var Actors = new List<Actor>();
+        var StaffMembers = new List<Staff>();
+
+        // if I added actors to the
+        if (movie.ActorsIds != null)
+        {
+            foreach (Guid id in movie.ActorsIds)
+            {
+                var actor = await _repository.GetAsync(new ActorSpec(id), cancellationToken);
+                if (actor == null)
+                {
+                    return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Bad actor id provided", ErrorCodes.NotFound));
+                }
+                Actors.Add(actor);
+            }
+        }
+
+        if (movie.StaffMembersIds != null)
+        {
+            foreach (Guid id in movie.StaffMembersIds)
+            {
+                var staffMember = await _repository.GetAsync(new StaffSpec(id), cancellationToken);
+                if (staffMember == null)
+                {
+                    return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Bad actor id provided", ErrorCodes.NotFound));
+                }
+                StaffMembers.Add(staffMember);
+            }
+        }
+
         if (entity != null)
         {
-            entity.Description = movie.Description;
-            entity.Duration = movie.Duration;
-            entity.Name = movie.Name;
-            entity.ReleaseDate = movie.ReleaseDate;
-            entity.Language = movie.Language;
-            entity.Genre = movie.Genre;
-            entity.ImageUrl = movie.ImageUrl;
-            entity.Rating = movie.Rating;
-            entity.NumberOfRatings = movie.NumberOfRatings;
+            entity.Description = movie.Description ?? entity.Description;
+            entity.Duration = movie.Duration ?? entity.Duration;
+            entity.Name = movie.Name ?? entity.Name;
+            entity.ReleaseDate = movie.ReleaseDate ?? entity.ReleaseDate;
+            entity.Language = movie.Language ?? entity.Language;
+            entity.Genre = movie.Genre ?? entity.Genre;
+            entity.ImageUrl = movie.ImageUrl ?? entity.ImageUrl;
+            entity.Rating = movie.Rating ?? entity.Rating;
+            entity.NumberOfRatings = movie.NumberOfRatings ?? entity.NumberOfRatings;
+            entity.StaffMembers = movie.StaffMembersIds == null ? entity.StaffMembers : StaffMembers;
+            entity.Actors = movie.ActorsIds == null ? entity.Actors : Actors;
 
             await _repository.UpdateAsync(entity, cancellationToken);
         }

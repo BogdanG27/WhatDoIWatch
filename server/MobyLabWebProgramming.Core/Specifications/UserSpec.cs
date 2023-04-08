@@ -15,6 +15,9 @@ public sealed class UserSpec : BaseSpec<UserSpec, User>
 
     public UserSpec(string email)
     {
-        Query.Where(e => e.Email == email);
+        Query
+            .Include(e => e.FavoriteMovies)
+            .Include(e => e.FavoriteTvShows)
+            .Where(e => e.Email == email);
     }
 }

@@ -16,8 +16,6 @@ const queryClient = new QueryClient();
  */
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    {/* CssBaseline is used to add the Material UI styling. */}
-    <CssBaseline />
     {/* The Provider adds the storage for Redux. */}
     <Provider store={store}>
       {/* LanguageContextProvider adds the internationalization context for the application to persist the current language. */}

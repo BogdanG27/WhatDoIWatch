@@ -27,7 +27,8 @@ export const ErrorCodes = {
     CannotAdd: 'CannotAdd',
     CannotUpdate: 'CannotUpdate',
     CannotDelete: 'CannotDelete',
-    MailSendFailed: 'MailSendFailed'
+    MailSendFailed: 'MailSendFailed',
+    NotFound: 'NotFound'
 } as const;
 export type ErrorCodes = typeof ErrorCodes[keyof typeof ErrorCodes];
 

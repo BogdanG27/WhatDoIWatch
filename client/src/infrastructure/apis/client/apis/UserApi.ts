@@ -52,6 +52,14 @@ export interface ApiUserGetPageGetRequest {
     pageSize?: number;
 }
 
+export interface ApiUserToggleMovieFavoriteMovieIdPutRequest {
+    movieId: string;
+}
+
+export interface ApiUserToggleTvShowFavoriteTvShowIdPutRequest {
+    tvShowId: string;
+}
+
 export interface ApiUserUpdatePutRequest {
     userUpdateDTO?: UserUpdateDTO;
 }
@@ -193,6 +201,70 @@ export class UserApi extends runtime.BaseAPI {
      */
     async apiUserGetPageGet(requestParameters: ApiUserGetPageGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserDTOPagedResponseRequestResponse> {
         const response = await this.apiUserGetPageGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiUserToggleMovieFavoriteMovieIdPutRaw(requestParameters: ApiUserToggleMovieFavoriteMovieIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RequestResponse>> {
+        if (requestParameters.movieId === null || requestParameters.movieId === undefined) {
+            throw new runtime.RequiredError('movieId','Required parameter requestParameters.movieId was null or undefined when calling apiUserToggleMovieFavoriteMovieIdPut.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/api/User/ToggleMovieFavorite/{movieId}`.replace(`{${"movieId"}}`, encodeURIComponent(String(requestParameters.movieId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RequestResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiUserToggleMovieFavoriteMovieIdPut(requestParameters: ApiUserToggleMovieFavoriteMovieIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RequestResponse> {
+        const response = await this.apiUserToggleMovieFavoriteMovieIdPutRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiUserToggleTvShowFavoriteTvShowIdPutRaw(requestParameters: ApiUserToggleTvShowFavoriteTvShowIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RequestResponse>> {
+        if (requestParameters.tvShowId === null || requestParameters.tvShowId === undefined) {
+            throw new runtime.RequiredError('tvShowId','Required parameter requestParameters.tvShowId was null or undefined when calling apiUserToggleTvShowFavoriteTvShowIdPut.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/api/User/ToggleTvShowFavorite/{tvShowId}`.replace(`{${"tvShowId"}}`, encodeURIComponent(String(requestParameters.tvShowId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RequestResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiUserToggleTvShowFavoriteTvShowIdPut(requestParameters: ApiUserToggleTvShowFavoriteTvShowIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RequestResponse> {
+        const response = await this.apiUserToggleTvShowFavoriteTvShowIdPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

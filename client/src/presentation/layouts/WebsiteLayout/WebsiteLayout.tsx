@@ -10,10 +10,10 @@ export const WebsiteLayout = memo(
   (props: PropsWithChildren<{}>) => {
     const { children } = props;
 
-    return <Fragment>
+    return <div>
       <Navbar />
       <MainContent>{children}</MainContent>
       <Footer />
-    </Fragment>
+    </div>
   }
 );

@@ -4,7 +4,10 @@
     "paths": {
       "@application/*": ["application/*"], // You can add more folders here to reference the with "@" instead of with a relative path. 
       "@presentation/*": ["presentation/*"],
-      "@infrastructure/*": ["infrastructure/*"]
+      "@infrastructure/*": ["infrastructure/*"],
+      "@components/*": ["presentation/components"],
+      "@ui/*": ["presentation/components/ui"],
+      "@forms/*": ["presentation/components/forms"],
     },
     "target": "ESNext",
     "useDefineForClassFields": true,

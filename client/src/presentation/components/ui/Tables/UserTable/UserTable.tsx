@@ -21,9 +21,6 @@ const useHeader = (): { key: keyof UserDTO, name: string }[] => {
     ]
 };
 
-/**
- * The values in the table are organized as rows so this function takes the entries and creates the row values ordering them according to the order map.
- */
 const getRowValues = (entries: UserDTO[] | null | undefined, orderMap: { [key: string]: number }) =>
     entries?.map(
         entry => {

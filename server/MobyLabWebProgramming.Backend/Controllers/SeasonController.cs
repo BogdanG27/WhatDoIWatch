@@ -19,26 +19,16 @@ public class SeasonController : AuthorizedController
         _seasonService = seasonService;
     }
 
-    [Authorize]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<RequestResponse<SeasonDTO>>> GetById([FromRoute] Guid id)
     {
-        var currentUser = await GetCurrentUser();
-
-        return currentUser.Result != null ?
-            this.FromServiceResponse(await _seasonService.GetSeason(id)) :
-            this.ErrorMessageResult<SeasonDTO>(currentUser.Error);
+        return this.FromServiceResponse(await _seasonService.GetSeason(id));
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<ActionResult<RequestResponse<PagedResponse<SeasonDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination)
     {
-        var currentUser = await GetCurrentUser();
-
-        return currentUser.Result != null ?
-            this.FromServiceResponse(await _seasonService.GetSeasons(pagination)) :
-            this.ErrorMessageResult<PagedResponse<SeasonDTO>>(currentUser.Error);
+        return this.FromServiceResponse(await _seasonService.GetSeasons(pagination));
     }
 
     [Authorize]

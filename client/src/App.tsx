@@ -1,13 +1,20 @@
 import { UserRoleEnum } from "@infrastructure/apis/client";
 import { useOwnUserHasRole } from "@infrastructure/hooks/useOwnUser";
+import { darkBackgroundImageUrl, lightBackgroundImageUrl } from "@infrastructure/utils/urls";
 import { CssBaseline, PaletteMode, ThemeProvider, createTheme } from "@mui/material";
-import { amber, deepOrange, grey, teal } from "@mui/material/colors";
-import { dark } from "@mui/material/styles/createPalette";
+import { grey, teal } from "@mui/material/colors";
 import { AppIntlProvider } from "@presentation/components/ui/AppIntlProvider";
 import { ToastNotifier } from "@presentation/components/ui/ToastNotifier";
 import { ActorsPage } from "@presentation/pages/ActorsPage";
+import { FavouritesPage } from "@presentation/pages/FavouritesPage";
 import { HomePage } from "@presentation/pages/HomePage";
+import { LibraryPage } from "@presentation/pages/LibraryPage";
 import { LoginPage } from "@presentation/pages/LoginPage";
+import { MoviePage } from "@presentation/pages/MoviePage";
+import { MoviesPage } from "@presentation/pages/MoviesPage";
+import { RegistrationPage } from "@presentation/pages/RegistrationPage";
+import { StaffsPage } from "@presentation/pages/StaffPage";
+import { TvShowPage } from "@presentation/pages/TvShowPage";
 import { UserFilesPage } from "@presentation/pages/UserFilesPage";
 import { UsersPage } from "@presentation/pages/UsersPage";
 import { createContext, useMemo, useState } from "react";
@@ -22,9 +29,8 @@ const getDesignTokens = (mode: PaletteMode) => ({
         // palette values for light mode
         primary: teal,
         divider: teal[200],
-        text: {
-          primary: grey[900],
-          secondary: grey[800],
+        background: {
+          default: "white",
         },
       }
       : {
@@ -59,6 +65,9 @@ export function App() {
         setMode((prevMode: PaletteMode) =>
           prevMode === 'light' ? 'dark' : 'light',
         );
+        document.body.style.backgroundImage = mode === "dark" ?
+          lightBackgroundImageUrl :
+          darkBackgroundImageUrl
       },
     }),
     [mode],
@@ -75,10 +84,17 @@ export function App() {
         {/* This adds the routes and route mappings on the various components. */}
         <Routes>
           <Route path={AppRoute.Index} element={<HomePage />} /> {/* Add a new route with a element as the page. */}
+          <Route path={AppRoute.Library} element={<LibraryPage />} />
+          <Route path={AppRoute.MovieItem} element={<MoviePage />} />
+          <Route path={AppRoute.TvShowItem} element={<TvShowPage />} />
+          <Route path={AppRoute.Favourites} element={<FavouritesPage />} /> {/* Add a new route with a element as the page. */}
           <Route path={AppRoute.Login} element={<LoginPage />} />
+          <Route path={AppRoute.Register} element={<RegistrationPage />} />
           {isAdmin && <Route path={AppRoute.Users} element={<UsersPage />} />} {/* If the user doesn't have the right role this route shouldn't be used. */}
           {isAdmin && <Route path={AppRoute.UserFiles} element={<UserFilesPage />} />}
           {isAdmin && <Route path={AppRoute.Actors} element={<ActorsPage />} />}
+          {isAdmin && <Route path={AppRoute.Staff} element={<StaffsPage />} />}
+          {isAdmin && <Route path={AppRoute.Movies} element={<MoviesPage />} />}
         </Routes>
       </ThemeProvider>
     </ColorModeContext.Provider>

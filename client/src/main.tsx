@@ -15,20 +15,17 @@ const queryClient = new QueryClient();
  * This is the entry point of the application, this corresponds to the configuration for injecting multiple services in the application.
  */
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    {/* The Provider adds the storage for Redux. */}
-    <Provider store={store}>
-      {/* LanguageContextProvider adds the internationalization context for the application to persist the current language. */}
-      <LanguageContextProvider>
-        {/* QueryClientProvider adds the query client and internal state. */}
-        <QueryClientProvider client={queryClient}>
-          {/* BrowserRouter adds routing withing the browser. */}
-          <BrowserRouter>
-            {/* Here the actual application contend and logic is added. */}
-            <App />
-          </BrowserRouter>
-        </QueryClientProvider>
-      </LanguageContextProvider>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    {/* LanguageContextProvider adds the internationalization context for the application to persist the current language. */}
+    <LanguageContextProvider>
+      {/* QueryClientProvider adds the query client and internal state. */}
+      <QueryClientProvider client={queryClient}>
+        {/* BrowserRouter adds routing withing the browser. */}
+        <BrowserRouter>
+          {/* Here the actual application contend and logic is added. */}
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </LanguageContextProvider>
+  </Provider>
 )

@@ -46,6 +46,12 @@ export interface ApiMovieGetByIdIdGetRequest {
     id: string;
 }
 
+export interface ApiMovieGetPageFavouritesGetRequest {
+    search?: string;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiMovieGetPageGetRequest {
     search?: string;
     page?: number;
@@ -153,6 +159,46 @@ export class MovieApi extends runtime.BaseAPI {
      */
     async apiMovieGetByIdIdGet(requestParameters: ApiMovieGetByIdIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MovieDTORequestResponse> {
         const response = await this.apiMovieGetByIdIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiMovieGetPageFavouritesGetRaw(requestParameters: ApiMovieGetPageFavouritesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MovieDTOPagedResponseRequestResponse>> {
+        const queryParameters: any = {};
+
+        if (requestParameters.search !== undefined) {
+            queryParameters['Search'] = requestParameters.search;
+        }
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['Page'] = requestParameters.page;
+        }
+
+        if (requestParameters.pageSize !== undefined) {
+            queryParameters['PageSize'] = requestParameters.pageSize;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/api/Movie/GetPageFavourites`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MovieDTOPagedResponseRequestResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiMovieGetPageFavouritesGet(requestParameters: ApiMovieGetPageFavouritesGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MovieDTOPagedResponseRequestResponse> {
+        const response = await this.apiMovieGetPageFavouritesGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

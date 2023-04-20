@@ -2,7 +2,6 @@ import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useActorAddDialogController } from "./ActorAddDialog.controller";
 import { ActorForm } from "@presentation/components/forms/Actor/ActorForm";
 import { useIntl } from "react-intl";
-import { useActorFormController } from "@presentation/components/forms/Actor/ActorForm.controller";
 import { FormActionType } from "@infrastructure/utils/formActionTypes";
 
 /**

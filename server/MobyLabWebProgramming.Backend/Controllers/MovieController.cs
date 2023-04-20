@@ -19,26 +19,16 @@ public class MovieController : AuthorizedController
         _movieService = movieService;
     }
 
-    [Authorize]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<RequestResponse<MovieDTO>>> GetById([FromRoute] Guid id)
     {
-        var currentUser = await GetCurrentUser();
-
-        return currentUser.Result != null ?
-            this.FromServiceResponse(await _movieService.GetMovie(id)) :
-            this.ErrorMessageResult<MovieDTO>(currentUser.Error);
+        return this.FromServiceResponse(await _movieService.GetMovie(id));
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<ActionResult<RequestResponse<PagedResponse<MovieDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination)
     {
-        var currentUser = await GetCurrentUser();
-
-        return currentUser.Result != null ?
-            this.FromServiceResponse(await _movieService.GetMovies(pagination)) :
-            this.ErrorMessageResult<PagedResponse<MovieDTO>>(currentUser.Error);
+        return this.FromServiceResponse(await _movieService.GetMovies(pagination));
     }
 
     [Authorize]

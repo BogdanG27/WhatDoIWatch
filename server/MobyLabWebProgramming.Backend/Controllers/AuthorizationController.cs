@@ -27,6 +27,13 @@ public class AuthorizationController : ControllerBase // The controller must inh
     [HttpPost] // This attribute will make the controller respond to a HTTP POST request on the route /api/Authorization/Login having a JSON body deserialized as a LoginDTO.
     public async Task<ActionResult<RequestResponse<LoginResponseDTO>>> Login([FromBody] LoginDTO login) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
     {
-        return this.FromServiceResponse(await _userService.Login(login with { Password = PasswordUtils.HashPassword(login.Password)})); // The "with" keyword works only with records and it creates another object instance with the updated properties. 
+        return this.FromServiceResponse(await _userService.Login(login with { Password = PasswordUtils.HashPassword(login.Password) })); // The "with" keyword works only with records and it creates another object instance with the updated properties. 
+    }
+
+    [HttpPost] // This attribute will make the controller respond to a HTTP POST request on the route /api/Authorization/Login having a JSON body deserialized as a LoginDTO.
+    public async Task<ActionResult<RequestResponse>> Register([FromBody] UserAddDTO user) // The FromBody attribute indicates that the parameter is deserialized from the JSON body.
+    {
+        user.Password = PasswordUtils.HashPassword(user.Password);
+        return this.FromServiceResponse(await _userService.Register(user)); // The "with" keyword works only with records and it creates another object instance with the updated properties. 
     }
 }

@@ -8,5 +8,11 @@
     "labels.addUser": "Add user",
     "labels.addUserFile": "Add file",
     "labels.addActor": "Add actor",
-    "labels.updateActor": "Update actor"
+    "labels.addStaff": "Add staff member",
+    "labels.addMovie": "Add movie",
+    "labels.updateActor": "Update actor",
+    "labels.updateStaff": "Update staff member",
+    "labels.updateMovie": "Update movie",
+    "labels.heroTitle": "Check out the some of the best movies and TV shows",
+    "labels.heroDescription": "Movies and TV shows offer us a window into different worlds, cultures, and experiences. They entertain, inspire, and connect us, leaving a lasting impact on our lives."
 }

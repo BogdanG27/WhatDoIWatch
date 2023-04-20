@@ -27,10 +27,12 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
   place-items: center;
   min-height: 100vh;
   padding: 0 10%;
+  background-image: url('layered-waves-haikei-dark.svg');
+  background-size: cover;
+  background-repeat: space;
 }
 
 h1 {

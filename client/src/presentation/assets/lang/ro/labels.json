@@ -8,5 +8,12 @@
     "labels.addUser": "Adauga utilizator",
     "labels.addUserFile": "Adauga fisier",
     "labels.addActor": "Adauga actor",
-    "labels.updateActor": "Actualizeaza actor"
+    "labels.addStaff": "Adauga membru staff",
+    "labels.addMovie": "Adauga film",
+    "labels.updateActor": "Actualizeaza actor",
+    "labels.updateStaff": "Actualizeaza membru staff",
+    "labels.updateMovie": "Actualizeaza film",
+    "labels.heroTitle": "Vedeti aici unele dintre cele mai bune filme si seriale",
+    "labels.heroDescription": "Filmele și serialele ne oferă o fereastră către lumi, culturi și experiențe diferite. Ele ne distreaza, ne inspiră și ne conectează, lăsând o amprentă durabilă asupra vieții noastre."
+
 }

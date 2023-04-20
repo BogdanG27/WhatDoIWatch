@@ -19,18 +19,12 @@ public class StaffController : AuthorizedController
         _staffService = staffService;
     }
 
-    [Authorize]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<RequestResponse<StaffDTO>>> GetById([FromRoute] Guid id)
     {
-        var currentUser = await GetCurrentUser();
-
-        return currentUser.Result != null ?
-            this.FromServiceResponse(await _staffService.GetStaff(id)) :
-            this.ErrorMessageResult<StaffDTO>(currentUser.Error);
+        return this.FromServiceResponse(await _staffService.GetStaff(id));
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<ActionResult<RequestResponse<PagedResponse<StaffDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination)
     {

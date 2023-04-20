@@ -85,6 +85,34 @@ public class UserService : IUserService
     public async Task<ServiceResponse<int>> GetUserCount(CancellationToken cancellationToken = default) =>
         ServiceResponse<int>.ForSuccess(await _repository.GetCountAsync<User>(cancellationToken)); // Get the count of all user entities in the database.
 
+    public async Task<ServiceResponse> Register(UserAddDTO user, CancellationToken cancellationToken = default)
+    {
+        var result = await _repository.GetAsync(new UserSpec(user.Email), cancellationToken);
+
+        if (result != null)
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The user already exists!", ErrorCodes.UserAlreadyExists));
+        }
+
+        if (user.Role == UserRoleEnum.Admin)
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "You can't register with an Admin role, only an admin can create another admin!", ErrorCodes.CannotAdd));
+        }
+
+        await _repository.AddAsync(new User
+        {
+            Email = user.Email,
+            Name = user.Name,
+            Role = user.Role,
+            Password = user.Password
+        }, cancellationToken);
+
+        await _mailService.SendMail(user.Email, "Welcome!", MailTemplates.UserAddTemplate(user.Name), true, "My App", cancellationToken); // You can send a notification on the user email. Change the email if you want.
+
+        return ServiceResponse.ForSuccess();
+    }
+
+
     public async Task<ServiceResponse> AddUser(UserAddDTO user, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
         if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin) // Verify who can add the user, you can change this however you se fit.
@@ -150,30 +178,39 @@ public class UserService : IUserService
         {
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Can't add movie to favourites! User was not found", ErrorCodes.NotFound));
         }
-        User? entity = await _repository.GetAsync(new UserSpec(requestingUser.Id), cancellationToken);
-        if (entity != null)
+        User? user = await _repository.GetAsync(new UserFavouritesSpec(requestingUser.Id), cancellationToken);
+        if (user != null)
         {
-            Movie? movie = await _repository.GetAsync(new MovieSpec(movieId), cancellationToken);
+            Movie? movie = await _repository.GetAsync(new MovieFavouriteProjectionSpec(movieId), cancellationToken);
 
             if (movie == null)
             {
                 return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Movie not found", ErrorCodes.NotFound));
             }
 
-            if (entity.FavoriteMovies == null)
+            Console.WriteLine(user.FavoriteMovies.Count);
+            foreach (var moviee in user.FavoriteMovies)
             {
-                entity.FavoriteMovies = new List<Movie>();
+                Console.WriteLine(moviee);
             }
 
-            if (entity.FavoriteMovies.Contains(movie))
+            if (user.FavoriteMovies == null)
             {
-                entity.FavoriteMovies.Remove(movie);
+                user.FavoriteMovies = new List<Movie>();
+            }
+
+            Movie movieToRemove = user.FavoriteMovies.FirstOrDefault(movie => movie.Id == movieId);
+            if (movieToRemove != null)
+            {
+                var result = user.FavoriteMovies.Remove(movieToRemove);
             }
             else
             {
-                entity.FavoriteMovies.Add(movie);
+                user.FavoriteMovies.Add(movie);
             }
-            await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
+            Console.WriteLine(user.FavoriteMovies.Count);
+
+            await _repository.UpdateAsync(user, cancellationToken); // Update the entity and persist the changes.
         }
         return ServiceResponse.ForSuccess();
     }

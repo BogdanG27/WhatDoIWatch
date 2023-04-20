@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { profileReducer } from "./state-slices";
 import { actorReducer } from './state-slices/actor/actorSlice';
+import { staffReducer } from './state-slices/staff/staffSlice';
+import { movieReducer } from './state-slices/movie/movieSlice';
 
 /** 
  *  This is the store to register each reduces with its own slice.
@@ -10,7 +12,9 @@ import { actorReducer } from './state-slices/actor/actorSlice';
 export const store = configureStore({
   reducer: {
     profileReducer,
-    actorReducer
+    actorReducer,
+    staffReducer,
+    movieReducer
   }
 });
 

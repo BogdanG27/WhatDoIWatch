@@ -19,26 +19,16 @@ public class TvShowController : AuthorizedController
         _tvShowService = tvShowService;
     }
 
-    [Authorize]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<RequestResponse<TvShowDTO>>> GetById([FromRoute] Guid id)
     {
-        var currentUser = await GetCurrentUser();
-
-        return currentUser.Result != null ?
-            this.FromServiceResponse(await _tvShowService.GetTvShow(id)) :
-            this.ErrorMessageResult<TvShowDTO>(currentUser.Error);
+        return this.FromServiceResponse(await _tvShowService.GetTvShow(id));
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<ActionResult<RequestResponse<PagedResponse<TvShowDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination)
     {
-        var currentUser = await GetCurrentUser();
-
-        return currentUser.Result != null ?
-            this.FromServiceResponse(await _tvShowService.GetTvShows(pagination)) :
-            this.ErrorMessageResult<PagedResponse<TvShowDTO>>(currentUser.Error);
+        return this.FromServiceResponse(await _tvShowService.GetTvShows(pagination));
     }
 
     [Authorize]

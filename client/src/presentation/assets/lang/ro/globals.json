@@ -29,5 +29,24 @@
   "globals.actors": "Actori",
   "globals.photoUrl": "Url imagine",
   "globals.female": "Femeie",
-  "globals.male": "Barbat"
+  "globals.male": "Barbat",
+  "globals.library": "Librarie",
+  "globals.favourites": "Favorite",
+  "globals.tables": "Tabele",
+  "globals.staff": "Membrii Staff",
+  "globals.type": "Tip staff",
+  "globals.movies": "Filme",
+  "globals.releaseDate": "Data aparitie",
+  "globals.language": "Limba",
+  "globals.genre": "Gen",
+  "globals.imageUrl": "Url imagine",
+  "globals.rating": "Rating",
+  "globals.numberOfRatings": "Numarul rating-urilor",
+  "globals.duration": "Durata",
+  "globals.tvShows": "Seriale",
+  "globals.noAccountMessage": "Nu ai cont?",
+  "globals.register": "Inregistreaza-te",
+  "globals.alreadyAccount": "Ai deja un cont?",
+  "globals.seasons": "Sezoane"
+
 }

@@ -2,13 +2,12 @@ import { useAppSelector } from "@application/store";
 import { ApiUserGetPageGetRequest, UserAddDTO, UserApi } from "../client";
 import { getAuthenticationConfiguration } from "@infrastructure/utils/userUtils";
 
-/**
- * Use constants to identify mutations and queries.
- */
 const getUsersQueryKey = "getUsersQuery";
 const getUserQueryKey = "getUserQuery";
 const addUserMutationKey = "addUserMutation";
 const deleteUserMutationKey = "deleteUserMutation";
+const toggleMovieMutationKey = "toggleMovieMutation";
+const toggleTvShowMutationKey = "toggleTvShowMutation";
 
 /**
  * Returns the an object with the callbacks that can be used for the React Query API, in this case to manage the user API.
@@ -21,6 +20,8 @@ export const useUserApi = () => {
     const getUser = (id: string) => new UserApi(config).apiUserGetByIdIdGet({ id });
     const addUser = (user: UserAddDTO) => new UserApi(config).apiUserAddPost({ userAddDTO: user });
     const deleteUser = (id: string) => new UserApi(config).apiUserDeleteIdDelete({ id });
+    const toggleMovie = (movieId: string) => new UserApi(config).apiUserToggleMovieFavoriteMovieIdPut({ movieId });
+    const toggleTvShow = (tvShowId: string) => new UserApi(config).apiUserToggleTvShowFavoriteTvShowIdPut({ tvShowId });
 
     return {
         getUsers: { // Return the query object.
@@ -38,6 +39,14 @@ export const useUserApi = () => {
         deleteUser: {
             key: deleteUserMutationKey,
             mutation: deleteUser
+        },
+        toggleFavouriteMovie: {
+            key: toggleMovieMutationKey,
+            mutation: toggleMovie
+        },
+        toggleFavouriteTvShow: {
+            key: toggleTvShowMutationKey,
+            mutation: toggleTvShow
         }
     }
 }

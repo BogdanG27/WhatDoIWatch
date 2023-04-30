@@ -24,7 +24,7 @@ export const HomePage = memo(() => {
 
   return (
     <Fragment>
-      <Seo title="MobyLab Web App | Home" />
+      <Seo title="What do I watch" />
       <WebsiteLayout>
         <Grid container spacing={2}>
           <Grid item xs={12}>

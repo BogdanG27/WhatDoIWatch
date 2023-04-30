@@ -90,11 +90,9 @@ public class UserController : AuthorizedController // Here we use the Authorized
     [HttpPut("{movieId:guid}")] // This attribute will make the controller respond to a HTTP DELETE request on the route /api/User/Delete/<some_guid>.
     public async Task<ActionResult<RequestResponse>> ToggleMovieFavorite([FromRoute] Guid movieId) // The FromRoute attribute will bind the id from the route to this parameter.
     {
-        var currentUser = await GetCurrentUser();
+        var claims = ExtractClaims();
 
-        return currentUser.Result != null ?
-            this.FromServiceResponse(await UserService.ToggleFavouriteMovie(movieId, currentUser.Result)) :
-            this.ErrorMessageResult(currentUser.Error);
+        return this.FromServiceResponse(await UserService.ToggleFavouriteMovie(movieId, claims.Id));
     }
 
     [Authorize]

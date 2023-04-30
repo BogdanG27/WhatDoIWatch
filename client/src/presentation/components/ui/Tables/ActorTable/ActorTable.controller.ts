@@ -7,11 +7,11 @@ import { usePaginationController } from "../Pagination.controller";
 /**
  * This is controller hook manages the table state including the pagination and data retrieval from the backend.
  */
-export const useActorTableController = () => {
+export const useActorTableController = (search: string) => {
     const { getActors: { key: queryKey, query }, deleteActor: { key: deleteActorKey, mutation: deleteActor } } = useActorApi();
     const queryClient = useQueryClient(); // Get the query client.
     const { page, pageSize, setPagination } = usePaginationController(); // Get the pagination state.
-    const { data, isError, isLoading } = useQuery([queryKey, page, pageSize], () => query({ page, pageSize })); // Retrieve the table page from the backend via the query hook.
+    const { data, isError, isLoading } = useQuery([queryKey, page, pageSize, search], () => query({ page, pageSize, search })); // Retrieve the table page from the backend via the query hook.
     const { mutateAsync: deleteMutation } = useMutation([deleteActorKey], deleteActor); // Use a mutation to remove an entry.
     const remove = useCallback(
         (id: string) => deleteMutation(id).then(() => queryClient.invalidateQueries([queryKey])),

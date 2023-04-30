@@ -19,6 +19,7 @@ public sealed class UserFavouritesSpec : BaseSpec<UserFavouritesSpec, User, User
     {
         Id = e.Id,
         Email = e.Email,
+        Password = e.Password,
         Name = e.Name,
         Role = e.Role,
         FavoriteMovies = e.FavoriteMovies,

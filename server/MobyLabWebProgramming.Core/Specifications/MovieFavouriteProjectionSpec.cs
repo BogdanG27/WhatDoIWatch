@@ -19,6 +19,7 @@ public sealed class MovieFavouriteProjectionSpec : BaseSpec<MovieFavouriteProjec
         NumberOfRatings = e.NumberOfRatings,
         Rating = e.Rating,
         ReleaseDate = e.ReleaseDate,
+        Duration = e.Duration,
         Actors = e.Actors,
         StaffMembers = e.StaffMembers,
         FavouriteUsers = e.FavouriteUsers

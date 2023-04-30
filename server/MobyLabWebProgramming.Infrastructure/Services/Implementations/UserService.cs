@@ -172,14 +172,14 @@ public class UserService : IUserService
         return ServiceResponse.ForSuccess();
     }
 
-    public async Task<ServiceResponse> ToggleFavouriteMovie(Guid movieId, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> ToggleFavouriteMovie(Guid movieId, Guid userId = default, CancellationToken cancellationToken = default)
     {
-        if (requestingUser == null)
+        var entity = await _repository.GetAsync(new UserFavouritesSpec(userId), cancellationToken);
+        if (entity == null)
         {
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Can't add movie to favourites! User was not found", ErrorCodes.NotFound));
         }
-        User? user = await _repository.GetAsync(new UserFavouritesSpec(requestingUser.Id), cancellationToken);
-        if (user != null)
+        if (entity != null)
         {
             Movie? movie = await _repository.GetAsync(new MovieFavouriteProjectionSpec(movieId), cancellationToken);
 
@@ -187,30 +187,23 @@ public class UserService : IUserService
             {
                 return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Movie not found", ErrorCodes.NotFound));
             }
-
-            Console.WriteLine(user.FavoriteMovies.Count);
-            foreach (var moviee in user.FavoriteMovies)
+            if (entity.FavoriteMovies == null)
             {
-                Console.WriteLine(moviee);
+                entity.FavoriteMovies = new List<Movie>();
             }
 
-            if (user.FavoriteMovies == null)
-            {
-                user.FavoriteMovies = new List<Movie>();
-            }
-
-            Movie movieToRemove = user.FavoriteMovies.FirstOrDefault(movie => movie.Id == movieId);
+            Movie movieToRemove = entity.FavoriteMovies.FirstOrDefault(movie => movie.Id == movieId);
             if (movieToRemove != null)
             {
-                var result = user.FavoriteMovies.Remove(movieToRemove);
+                var result = entity.FavoriteMovies.Remove(movieToRemove);
+                Console.WriteLine(result);
             }
             else
             {
-                user.FavoriteMovies.Add(movie);
+                entity.FavoriteMovies.Add(movie);
             }
-            Console.WriteLine(user.FavoriteMovies.Count);
 
-            await _repository.UpdateAsync(user, cancellationToken); // Update the entity and persist the changes.
+            await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
         }
         return ServiceResponse.ForSuccess();
     }

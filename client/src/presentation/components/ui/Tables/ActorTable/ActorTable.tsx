@@ -5,13 +5,14 @@ import { useAppDispatch, useAppSelector } from "@application/store";
 import { useActorTableController } from "./ActorTable.controller";
 import { isUndefined } from "lodash";
 import { DataLoadingContainer } from "../../LoadingDisplay";
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
+import { IconButton, Input, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ActorAddDialog } from '../../Dialogs/ActorDialogs/ActorAddDialog';
 import { ActorUpdateDialog } from "../../Dialogs/ActorDialogs/ActorUpdateDialog";
 import { setToken } from '@application/state-slices';
 import { setActorToUpdate } from "@application/state-slices/actor";
 import { Actor } from "@application/state-slices/actor/actorSlice.types";
+import useDebounce from "@infrastructure/hooks/useDebounce";
 
 const useHeader = (): { key: keyof ActorDTO; name: string }[] => {
   const { formatMessage } = useIntl();
@@ -51,7 +52,8 @@ export const ActorTable = () => {
   const { formatMessage } = useIntl();
   const header = useHeader();
   const orderMap = header.reduce((acc, e, i) => { return { ...acc, [e.key]: i } }, {}) as { [key: string]: number };
-  const { handleChangePage, handleChangePageSize, pagedData, isError, isLoading, tryReload, labelDisplay, remove } = useActorTableController();
+  const [search, setSearch] = useState("");
+  const { handleChangePage, handleChangePageSize, pagedData, isError, isLoading, tryReload, labelDisplay, remove } = useActorTableController(search);
   const rowValues = getRowValues(pagedData?.data, orderMap);
   const [isUpdate, setIsUpdate] = useState(false);
 
@@ -62,6 +64,10 @@ export const ActorTable = () => {
 
   return <DataLoadingContainer isError={isError} isLoading={isLoading} tryReload={tryReload}>
     <ActorAddDialog />
+    <Input value={search} onChange={(e: any) => {
+      setSearch(e.target.value);
+      tryReload();
+    }} />
     <ActorUpdateDialog isOpen={isUpdate} setIsOpen={setIsUpdate} />
     {!isUndefined(pagedData) && !isUndefined(pagedData?.totalCount) && !isUndefined(pagedData?.page) && !isUndefined(pagedData?.pageSize) &&
       <TablePagination

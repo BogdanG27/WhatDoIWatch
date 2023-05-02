@@ -68,6 +68,7 @@ export const ActorTable = () => {
       setSearch(e.target.value);
       tryReload();
     }} />
+
     <ActorUpdateDialog isOpen={isUpdate} setIsOpen={setIsUpdate} />
     {!isUndefined(pagedData) && !isUndefined(pagedData?.totalCount) && !isUndefined(pagedData?.page) && !isUndefined(pagedData?.pageSize) &&
       <TablePagination

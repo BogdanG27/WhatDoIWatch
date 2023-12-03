@@ -11,8 +11,7 @@ export const MoviesAll = ({ movies, user }: MoviesTabProps) => {
 
   return <>
     {movies?.map(movie => {
-      const isFavourite = user?.favouriteMovies?.some(favMovie => favMovie.id === movie.id);
-      console.log(user?.favouriteMovies);
+      const isFavourite = user?.favouriteMovies?.some(favMovie => favMovie.movieId === movie.id);
       return <Grid key={movie.id} item xs={12} sm={6} md={4}>
         <MediaCard
           media={movie}
@@ -25,9 +24,8 @@ export const MoviesAll = ({ movies, user }: MoviesTabProps) => {
 }
 
 export const MoviesFavourite = ({ movies, user }: MoviesTabProps) => {
-  console.log(user?.favouriteMovies)
   return <>
-    {movies?.filter(movie => user?.favouriteMovies?.some(favMovie => favMovie.id === movie.id)).map(movie => <Grid key={movie.id} item xs={12} sm={6} md={4}>
+    {movies?.filter(movie => user?.favouriteMovies?.some(favMovie => favMovie.movieId === movie.id)).map(movie => <Grid key={movie.id} item xs={12} sm={6} md={4}>
       <MediaCard
         media={movie}
         isFavourite={true}

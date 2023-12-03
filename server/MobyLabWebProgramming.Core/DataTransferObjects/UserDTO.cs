@@ -12,6 +12,6 @@ public class UserDTO
     public string Name { get; set; } = default!;
     public string Email { get; set; } = default!;
     public UserRoleEnum Role { get; set; } = default!;
-    public ICollection<MovieSimpleDTO> FavouriteMovies { get; set; } = default!;
-    public ICollection<TvShowSimpleDTO> FavouriteTvShows { get; set; } = default!;
+    public ICollection<UserMovieDTO> FavouriteMovies { get; set; } = default!;
+    public ICollection<UserTvShowDTO> FavouriteTvShows { get; set; } = default!;
 }

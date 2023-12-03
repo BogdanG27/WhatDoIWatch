@@ -13,24 +13,24 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { MovieSimpleDTO } from './MovieSimpleDTO';
+import type { UserMovieDTO } from './UserMovieDTO';
 import {
-    MovieSimpleDTOFromJSON,
-    MovieSimpleDTOFromJSONTyped,
-    MovieSimpleDTOToJSON,
-} from './MovieSimpleDTO';
-import type { TvShowSimpleDTO } from './TvShowSimpleDTO';
-import {
-    TvShowSimpleDTOFromJSON,
-    TvShowSimpleDTOFromJSONTyped,
-    TvShowSimpleDTOToJSON,
-} from './TvShowSimpleDTO';
+    UserMovieDTOFromJSON,
+    UserMovieDTOFromJSONTyped,
+    UserMovieDTOToJSON,
+} from './UserMovieDTO';
 import type { UserRoleEnum } from './UserRoleEnum';
 import {
     UserRoleEnumFromJSON,
     UserRoleEnumFromJSONTyped,
     UserRoleEnumToJSON,
 } from './UserRoleEnum';
+import type { UserTvShowDTO } from './UserTvShowDTO';
+import {
+    UserTvShowDTOFromJSON,
+    UserTvShowDTOFromJSONTyped,
+    UserTvShowDTOToJSON,
+} from './UserTvShowDTO';
 
 /**
  * 
@@ -64,16 +64,16 @@ export interface UserDTO {
     role?: UserRoleEnum;
     /**
      * 
-     * @type {Array<MovieSimpleDTO>}
+     * @type {Array<UserMovieDTO>}
      * @memberof UserDTO
      */
-    favouriteMovies?: Array<MovieSimpleDTO> | null;
+    favouriteMovies?: Array<UserMovieDTO> | null;
     /**
      * 
-     * @type {Array<TvShowSimpleDTO>}
+     * @type {Array<UserTvShowDTO>}
      * @memberof UserDTO
      */
-    favouriteTvShows?: Array<TvShowSimpleDTO> | null;
+    favouriteTvShows?: Array<UserTvShowDTO> | null;
 }
 
 /**
@@ -99,8 +99,8 @@ export function UserDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): U
         'name': !exists(json, 'name') ? undefined : json['name'],
         'email': !exists(json, 'email') ? undefined : json['email'],
         'role': !exists(json, 'role') ? undefined : UserRoleEnumFromJSON(json['role']),
-        'favouriteMovies': !exists(json, 'favouriteMovies') ? undefined : (json['favouriteMovies'] === null ? null : (json['favouriteMovies'] as Array<any>).map(MovieSimpleDTOFromJSON)),
-        'favouriteTvShows': !exists(json, 'favouriteTvShows') ? undefined : (json['favouriteTvShows'] === null ? null : (json['favouriteTvShows'] as Array<any>).map(TvShowSimpleDTOFromJSON)),
+        'favouriteMovies': !exists(json, 'favouriteMovies') ? undefined : (json['favouriteMovies'] === null ? null : (json['favouriteMovies'] as Array<any>).map(UserMovieDTOFromJSON)),
+        'favouriteTvShows': !exists(json, 'favouriteTvShows') ? undefined : (json['favouriteTvShows'] === null ? null : (json['favouriteTvShows'] as Array<any>).map(UserTvShowDTOFromJSON)),
     };
 }
 
@@ -117,8 +117,8 @@ export function UserDTOToJSON(value?: UserDTO | null): any {
         'name': value.name,
         'email': value.email,
         'role': UserRoleEnumToJSON(value.role),
-        'favouriteMovies': value.favouriteMovies === undefined ? undefined : (value.favouriteMovies === null ? null : (value.favouriteMovies as Array<any>).map(MovieSimpleDTOToJSON)),
-        'favouriteTvShows': value.favouriteTvShows === undefined ? undefined : (value.favouriteTvShows === null ? null : (value.favouriteTvShows as Array<any>).map(TvShowSimpleDTOToJSON)),
+        'favouriteMovies': value.favouriteMovies === undefined ? undefined : (value.favouriteMovies === null ? null : (value.favouriteMovies as Array<any>).map(UserMovieDTOToJSON)),
+        'favouriteTvShows': value.favouriteTvShows === undefined ? undefined : (value.favouriteTvShows === null ? null : (value.favouriteTvShows as Array<any>).map(UserTvShowDTOToJSON)),
     };
 }
 

@@ -46,12 +46,6 @@ export interface ApiTvShowGetByIdIdGetRequest {
     id: string;
 }
 
-export interface ApiTvShowGetPageFavouritesGetRequest {
-    search?: string;
-    page?: number;
-    pageSize?: number;
-}
-
 export interface ApiTvShowGetPageGetRequest {
     search?: string;
     page?: number;
@@ -159,46 +153,6 @@ export class TvShowApi extends runtime.BaseAPI {
      */
     async apiTvShowGetByIdIdGet(requestParameters: ApiTvShowGetByIdIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TvShowDTORequestResponse> {
         const response = await this.apiTvShowGetByIdIdGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiTvShowGetPageFavouritesGetRaw(requestParameters: ApiTvShowGetPageFavouritesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TvShowDTOPagedResponseRequestResponse>> {
-        const queryParameters: any = {};
-
-        if (requestParameters.search !== undefined) {
-            queryParameters['Search'] = requestParameters.search;
-        }
-
-        if (requestParameters.page !== undefined) {
-            queryParameters['Page'] = requestParameters.page;
-        }
-
-        if (requestParameters.pageSize !== undefined) {
-            queryParameters['PageSize'] = requestParameters.pageSize;
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
-        }
-
-        const response = await this.request({
-            path: `/api/TvShow/GetPageFavourites`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => TvShowDTOPagedResponseRequestResponseFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiTvShowGetPageFavouritesGet(requestParameters: ApiTvShowGetPageFavouritesGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TvShowDTOPagedResponseRequestResponse> {
-        const response = await this.apiTvShowGetPageFavouritesGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

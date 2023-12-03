@@ -14,5 +14,4 @@ public abstract class Media : BaseEntity
     public int NumberOfRatings { get; set; } = default!;
     public ICollection<Actor> Actors { get; set; } = default!;
     public ICollection<Staff> StaffMembers { get; set; } = default!;
-    public ICollection<User> FavouriteUsers { get; set; } = default!;
 }

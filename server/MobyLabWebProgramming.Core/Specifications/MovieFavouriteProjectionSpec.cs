@@ -22,7 +22,6 @@ public sealed class MovieFavouriteProjectionSpec : BaseSpec<MovieFavouriteProjec
         Duration = e.Duration,
         Actors = e.Actors,
         StaffMembers = e.StaffMembers,
-        FavouriteUsers = e.FavouriteUsers
     };
 
     public MovieFavouriteProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
@@ -47,7 +46,6 @@ public sealed class MovieFavouriteProjectionSpec : BaseSpec<MovieFavouriteProjec
         Query
             .Include(e => e.Actors)
             .Include(e => e.StaffMembers)
-            .Include(e => e.FavouriteUsers)
-            .Where(e => EF.Functions.ILike(e.Name, searchExpr) && e.FavouriteUsers.Any(u => u.Id == userId));
+            .Where(e => EF.Functions.ILike(e.Name, searchExpr));
     }
 }

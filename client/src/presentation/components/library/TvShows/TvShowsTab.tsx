@@ -13,8 +13,7 @@ export const TvShowsAll = ({ tvShows, user }: TvShowsTabProps) => {
 
   return <>
     {tvShows?.map(tvShow => {
-      const isFavourite = user?.favouriteTvShows?.some(favTvShow => favTvShow.id === tvShow.id);
-      console.log(user?.favouriteTvShows);
+      const isFavourite = user?.favouriteTvShows?.some(favTvShow => favTvShow.tvShowId === tvShow.id);
       return <Grid key={tvShow.id} item xs={12} sm={6} md={4}>
         <MediaCard
           media={tvShow}
@@ -28,7 +27,7 @@ export const TvShowsAll = ({ tvShows, user }: TvShowsTabProps) => {
 
 export const TvShowsFavourite = ({ tvShows, user }: TvShowsTabProps) => {
   return <>
-    {tvShows?.filter(tvShow => user?.favouriteTvShows?.some(favTvShow => favTvShow.id === tvShow.id)).map(tvShow => <Grid key={tvShow.id} item xs={12} sm={6} md={4}>
+    {tvShows?.filter(tvShow => user?.favouriteTvShows?.some(favTvShow => favTvShow.tvShowId === tvShow.id)).map(tvShow => <Grid key={tvShow.id} item xs={12} sm={6} md={4}>
       <MediaCard
         media={tvShow}
         isFavourite={true}

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MobyLabWebProgramming.Infrastructure.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MobyLabWebProgramming.Infrastructure.Migrations
 {
     [DbContext(typeof(WebAppDatabaseContext))]
-    partial class WebAppDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20231202221831_Moved_FavouriteUsers")]
+    partial class Moved_FavouriteUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,7 +269,12 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TvShow");
                 });
@@ -404,33 +411,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.ToTable("UserMovie");
                 });
 
-            modelBuilder.Entity("UserTvShow", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("TvShowId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TvShowId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserTvShow");
-                });
-
             modelBuilder.Entity("ActorMovie", b =>
                 {
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Actor", null)
@@ -470,6 +450,13 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("TvShow");
+                });
+
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.TvShow", b =>
+                {
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.User", null)
+                        .WithMany("FavoriteTvShows")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.UserFile", b =>
@@ -532,25 +519,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("UserTvShow", b =>
-                {
-                    b.HasOne("MobyLabWebProgramming.Core.Entities.TvShow", "TvShow")
-                        .WithMany("FavouriteUsers")
-                        .HasForeignKey("TvShowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
-                        .WithMany("FavoriteTvShows")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TvShow");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Movie", b =>
                 {
                     b.Navigation("FavouriteUsers");
@@ -558,8 +526,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.TvShow", b =>
                 {
-                    b.Navigation("FavouriteUsers");
-
                     b.Navigation("Seasons");
                 });
 

@@ -18,15 +18,20 @@ public class UserService : IUserService
     private readonly IRepository<WebAppDatabaseContext> _repository;
     private readonly ILoginService _loginService;
     private readonly IMailService _mailService;
+    private readonly IUserMovieService _userMovieService;
+    private readonly IUserTvShowService _userTvShowService;
 
     /// <summary>
     /// Inject the required services through the constructor.
     /// </summary>
-    public UserService(IRepository<WebAppDatabaseContext> repository, ILoginService loginService, IMailService mailService)
+    public UserService(IRepository<WebAppDatabaseContext> repository, ILoginService loginService, IMailService mailService,
+        IUserMovieService userMovieService, IUserTvShowService userTvShowService)
     {
         _repository = repository;
         _loginService = loginService;
         _mailService = mailService;
+        _userMovieService = userMovieService;
+        _userTvShowService = userTvShowService;
     }
 
     public async Task<ServiceResponse<UserDTO>> GetUser(Guid id, CancellationToken cancellationToken = default)
@@ -64,15 +69,7 @@ public class UserService : IUserService
             Id = result.Id,
             Email = result.Email,
             Name = result.Name,
-            Role = result.Role,
-            FavouriteMovies = result.FavoriteMovies.Select(e => new MovieSimpleDTO
-            {
-                Id = e.Id,
-                ImageUrl = e.ImageUrl,
-                Name = e.Name,
-                NumberOfRatings = e.NumberOfRatings,
-                Rating = e.Rating,
-            }).ToList()
+            Role = result.Role
         };
 
         return ServiceResponse<LoginResponseDTO>.ForSuccess(new()
@@ -181,29 +178,15 @@ public class UserService : IUserService
         }
         if (entity != null)
         {
-            Movie? movie = await _repository.GetAsync(new MovieFavouriteProjectionSpec(movieId), cancellationToken);
+            ServiceResponse result = await _userMovieService.DeleteMovieForUser(movieId, userId, cancellationToken);
 
-            if (movie == null)
-            {
-                return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Movie not found", ErrorCodes.NotFound));
-            }
-            if (entity.FavoriteMovies == null)
-            {
-                entity.FavoriteMovies = new List<Movie>();
-            }
+            if (!result.IsOk) {
+                result = await _userMovieService.AddUserMovieAssociations(movieId, userId, cancellationToken);
 
-            Movie movieToRemove = entity.FavoriteMovies.FirstOrDefault(movie => movie.Id == movieId);
-            if (movieToRemove != null)
-            {
-                var result = entity.FavoriteMovies.Remove(movieToRemove);
-                Console.WriteLine(result);
+                if (!result.IsOk) {
+                    return ServiceResponse.FromError(result.Error);
+                }
             }
-            else
-            {
-                entity.FavoriteMovies.Add(movie);
-            }
-
-            await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
         }
         return ServiceResponse.ForSuccess();
     }
@@ -217,27 +200,15 @@ public class UserService : IUserService
         User? entity = await _repository.GetAsync(new UserSpec(requestingUser.Id), cancellationToken);
         if (entity != null)
         {
-            TvShow? tvShow = await _repository.GetAsync(new TvShowSpec(tvShowId), cancellationToken);
+            ServiceResponse result = await _userTvShowService.DeleteTvShowForUser(tvShowId, requestingUser.Id, cancellationToken);
 
-            if (tvShow == null)
-            {
-                return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Tv show not found", ErrorCodes.NotFound));
-            }
+            if (!result.IsOk) {
+                result = await _userTvShowService.AddUserTvShowAssociation(tvShowId, requestingUser.Id, cancellationToken);
 
-            if (entity.FavoriteTvShows == null)
-            {
-                entity.FavoriteTvShows = new List<TvShow>();
+                if (!result.IsOk) {
+                    return ServiceResponse.FromError(result.Error);
+                }
             }
-
-            if (entity.FavoriteTvShows.Contains(tvShow))
-            {
-                entity.FavoriteTvShows.Remove(tvShow);
-            }
-            else
-            {
-                entity.FavoriteTvShows.Add(tvShow);
-            }
-            await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
         }
         return ServiceResponse.ForSuccess();
     }

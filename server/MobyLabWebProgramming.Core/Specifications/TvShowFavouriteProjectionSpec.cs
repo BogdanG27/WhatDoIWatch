@@ -68,8 +68,7 @@ public sealed class TvShowFavouriteProjectionSpec : BaseSpec<TvShowFavouriteProj
         Query
             .Include(e => e.Actors)
             .Include(e => e.StaffMembers)
-            .Include(e => e.FavouriteUsers)
             .Include(e => e.Seasons)
-            .Where(e => EF.Functions.ILike(e.Name, searchExpr) && e.FavouriteUsers.Any(u => u.Id == userId));
+            .Where(e => EF.Functions.ILike(e.Name, searchExpr));
     }
 }

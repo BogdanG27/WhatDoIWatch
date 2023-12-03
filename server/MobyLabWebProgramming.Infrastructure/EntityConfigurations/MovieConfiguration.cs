@@ -54,9 +54,5 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder.HasMany(m => m.Actors)
             .WithMany(a => a.Movies)
             .UsingEntity(j => j.ToTable("MovieActors"));
-
-        builder.HasMany(e => e.FavouriteUsers)
-            .WithMany(u => u.FavoriteMovies)
-            .UsingEntity(j => j.ToTable("UserMovies"));
     }
 }

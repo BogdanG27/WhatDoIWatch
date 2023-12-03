@@ -26,7 +26,6 @@ models/MovieDTO.ts
 models/MovieDTOPagedResponse.ts
 models/MovieDTOPagedResponseRequestResponse.ts
 models/MovieDTORequestResponse.ts
-models/MovieSimpleDTO.ts
 models/MovieUpdateDTO.ts
 models/RequestResponse.ts
 models/SeasonAddDTO.ts
@@ -48,7 +47,6 @@ models/TvShowDTO.ts
 models/TvShowDTOPagedResponse.ts
 models/TvShowDTOPagedResponseRequestResponse.ts
 models/TvShowDTORequestResponse.ts
-models/TvShowSimpleDTO.ts
 models/TvShowUpdateDTO.ts
 models/UserAddDTO.ts
 models/UserDTO.ts
@@ -58,7 +56,9 @@ models/UserDTORequestResponse.ts
 models/UserFileDTO.ts
 models/UserFileDTOPagedResponse.ts
 models/UserFileDTOPagedResponseRequestResponse.ts
+models/UserMovieDTO.ts
 models/UserRoleEnum.ts
+models/UserTvShowDTO.ts
 models/UserUpdateDTO.ts
 models/index.ts
 runtime.ts

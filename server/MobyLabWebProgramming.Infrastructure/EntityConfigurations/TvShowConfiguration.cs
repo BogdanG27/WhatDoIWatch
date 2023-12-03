@@ -42,10 +42,6 @@ public class TvShowConfiguration : IEntityTypeConfiguration<TvShow>
             .WithMany(a => a.TvShows)
             .UsingEntity(j => j.ToTable("TvShowActors"));
 
-        builder.HasMany(e => e.FavouriteUsers)
-            .WithMany(u => u.FavoriteTvShows)
-            .UsingEntity(j => j.ToTable("UserTvShows"));
-
         builder.HasMany(e => e.Seasons)
             .WithOne(s => s.TvShow)
             .HasForeignKey(e => e.TvShowId)

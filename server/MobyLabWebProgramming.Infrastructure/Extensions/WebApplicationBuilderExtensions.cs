@@ -179,6 +179,8 @@ public static class WebApplicationBuilderExtensions
             .AddTransient<IFileRepository, FileRepository>()
             .AddTransient<IUserFileService, UserFileService>()
             .AddTransient<IMovieService, MovieService>()
+            .AddTransient<IUserMovieService, UserMovieService>()
+            .AddTransient<IUserTvShowService, UserTvShowService>()
             .AddTransient<IMailService, MailService>();
 
         return builder;

@@ -10,6 +10,7 @@ import { useMovieApi } from "@infrastructure/apis/api-management/movie";
 import { useQuery } from "@tanstack/react-query";
 import { useTvShowApi } from "@infrastructure/apis/api-management/tvShow";
 import MediaCard from "@presentation/components/library/MediaCard";
+import { useOwnUser } from "@infrastructure/hooks/useOwnUser";
 
 const page = 1;
 const pageSizeMovies = 2;
@@ -21,6 +22,8 @@ export const HomePage = memo(() => {
   const { data: moviesData, isError: moviesIsError, isLoading: moviesIsLoading } = useQuery([queryKeyGetMovies, page, pageSizeMovies], () => getMovies({ page, pageSize: pageSizeMovies }));
   const { getTvShows: { key: queryKeyGetTvShows, query: getTvShows } } = useTvShowApi();
   const { data: tvShowsData, isError: tvShowsIsError, isLoading: tvShowsIsLoading } = useQuery([queryKeyGetTvShows, page, pageSizeTvShows], () => getTvShows({ page, pageSize: pageSizeTvShows }));
+
+  const user = useOwnUser();
 
   return (
     <Fragment>
@@ -53,12 +56,18 @@ export const HomePage = memo(() => {
               Featured
             </Typography>
           </Grid>
-          {moviesData?.response?.data?.map(movie => <Grid key={movie.id} item xs={12} sm={6} md={4}>
-            <MediaCard media={movie} type='movie' />
-          </Grid>)}
-          {tvShowsData?.response?.data?.map(tvShow => <Grid key={tvShow.id} item xs={12} sm={6} md={4}>
-            <MediaCard media={tvShow} type='tvShow' />
-          </Grid>)}
+          {moviesData?.response?.data?.map(movie => {
+            const isFavourite = user?.favouriteMovies?.some(favMovie => favMovie.movieId === movie.id);
+            return <Grid key={movie.id} item xs={12} sm={6} md={4}>
+              <MediaCard media={movie} type='movie' isFavourite={isFavourite} />
+            </Grid>
+          })}
+          {tvShowsData?.response?.data?.map(tvShow => {
+            const isFavourite = user?.favouriteTvShows?.some(favTvShow => favTvShow.tvShowId === tvShow.id);
+            return <Grid key={tvShow.id} item xs={12} sm={6} md={4}>
+              <MediaCard media={tvShow} type='tvShow' isFavourite={isFavourite} />
+            </Grid>
+          })}
 
         </Grid>
       </WebsiteLayout>

@@ -21,21 +21,17 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
         Email = e.Email,
         Name = e.Name,
         Role = e.Role,
-        FavouriteMovies = e.FavoriteMovies.Select(e => new MovieSimpleDTO
+        FavouriteMovies = e.FavoriteMovies.Select(e => new UserMovieDTO
         {
             Id = e.Id,
-            ImageUrl = e.ImageUrl,
-            Name = e.Name,
-            NumberOfRatings = e.NumberOfRatings,
-            Rating = e.Rating,
+            UserId = e.UserId,
+            MovieId = e.MovieId
         }).ToList(),
-        FavouriteTvShows = e.FavoriteTvShows.Select(e => new TvShowSimpleDTO
+        FavouriteTvShows = e.FavoriteTvShows.Select(e => new UserTvShowDTO
         {
             Id = e.Id,
-            ImageUrl = e.ImageUrl,
-            Name = e.Name,
-            NumberOfRatings = e.NumberOfRatings,
-            Rating = e.Rating
+            UserId = e.UserId,
+            TvShowId = e.TvShowId
         }).ToList()
     };
 

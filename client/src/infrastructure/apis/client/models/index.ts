@@ -15,6 +15,7 @@ export * from './LoginResponseDTO';
 export * from './LoginResponseDTORequestResponse';
 export * from './MovieAddDTO';
 export * from './MovieDTO';
+export * from './MovieDTOListRequestResponse';
 export * from './MovieDTOPagedResponse';
 export * from './MovieDTOPagedResponseRequestResponse';
 export * from './MovieDTORequestResponse';

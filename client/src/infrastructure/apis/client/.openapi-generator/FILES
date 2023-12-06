@@ -23,6 +23,7 @@ models/LoginResponseDTO.ts
 models/LoginResponseDTORequestResponse.ts
 models/MovieAddDTO.ts
 models/MovieDTO.ts
+models/MovieDTOListRequestResponse.ts
 models/MovieDTOPagedResponse.ts
 models/MovieDTOPagedResponseRequestResponse.ts
 models/MovieDTORequestResponse.ts

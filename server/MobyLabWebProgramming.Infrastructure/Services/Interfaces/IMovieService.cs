@@ -10,4 +10,5 @@ public interface IMovieService
     Task<ServiceResponse> AddMovie(MovieAddDTO movie, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
     Task<ServiceResponse> UpdateMovie(MovieUpdateDTO movie, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
     Task<ServiceResponse> DeleteMovie(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
+    Task<ServiceResponse<List<MovieDTO>>> GetMovieRecommandations(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
 }

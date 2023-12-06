@@ -63,4 +63,15 @@ public class MovieController : AuthorizedController
             this.FromServiceResponse(await _movieService.DeleteMovie(id)) :
             this.ErrorMessageResult(currentUser.Error);
     }
+
+    [Authorize]
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<RequestResponse<List<MovieDTO>>>> GetMovieRecommandations([FromRoute] Guid id)
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _movieService.GetMovieRecommandations(id, currentUser.Result)) :
+            this.ErrorMessageResult<List<MovieDTO>>(currentUser.Error);
+    }
 }

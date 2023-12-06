@@ -167,4 +167,18 @@ public class MovieService : IMovieService
 
         return ServiceResponse.ForSuccess();
     }
+
+    public async Task<ServiceResponse<List<MovieDTO>>> GetMovieRecommandations(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    {
+        var movie = await _repository.GetAsync(new MovieProjectionSpec(id), cancellationToken);
+
+        if (movie == null)
+        {
+            return ServiceResponse<List<MovieDTO>>.FromError(new(HttpStatusCode.NotFound, "Movie does not exist", ErrorCodes.NotFound));
+        }
+
+        var result = await _repository.ListAsync(new MovieProjectionSpec(movie, requestingUser), cancellationToken);
+
+        return ServiceResponse<List<MovieDTO>>.ForSuccess(result);
+    }
 }

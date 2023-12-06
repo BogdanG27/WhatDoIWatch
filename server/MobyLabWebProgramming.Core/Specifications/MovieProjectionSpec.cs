@@ -64,4 +64,14 @@ public sealed class MovieProjectionSpec : BaseSpec<MovieProjectionSpec, Movie, M
             .Include(e => e.StaffMembers)
             .Where(e => EF.Functions.ILike(e.Name, searchExpr));
     }
+
+    public MovieProjectionSpec(MovieDTO movie, UserDTO? user)
+    {
+        Query
+            .Include(e => e.Actors)
+            .Include(e => e.StaffMembers)
+            .Where(e => EF.Functions.ILike(e.Genre, movie.Genre))
+            .OrderByDescending(e => e.Rating)
+            .Take(10);
+    }
 }

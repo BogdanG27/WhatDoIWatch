@@ -16,6 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   MovieAddDTO,
+  MovieDTOListRequestResponse,
   MovieDTOPagedResponseRequestResponse,
   MovieDTORequestResponse,
   MovieUpdateDTO,
@@ -24,6 +25,8 @@ import type {
 import {
     MovieAddDTOFromJSON,
     MovieAddDTOToJSON,
+    MovieDTOListRequestResponseFromJSON,
+    MovieDTOListRequestResponseToJSON,
     MovieDTOPagedResponseRequestResponseFromJSON,
     MovieDTOPagedResponseRequestResponseToJSON,
     MovieDTORequestResponseFromJSON,
@@ -43,6 +46,10 @@ export interface ApiMovieDeleteIdDeleteRequest {
 }
 
 export interface ApiMovieGetByIdIdGetRequest {
+    id: string;
+}
+
+export interface ApiMovieGetMovieRecommandationsIdGetRequest {
     id: string;
 }
 
@@ -153,6 +160,38 @@ export class MovieApi extends runtime.BaseAPI {
      */
     async apiMovieGetByIdIdGet(requestParameters: ApiMovieGetByIdIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MovieDTORequestResponse> {
         const response = await this.apiMovieGetByIdIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiMovieGetMovieRecommandationsIdGetRaw(requestParameters: ApiMovieGetMovieRecommandationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MovieDTOListRequestResponse>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiMovieGetMovieRecommandationsIdGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/api/Movie/GetMovieRecommandations/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MovieDTOListRequestResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiMovieGetMovieRecommandationsIdGet(requestParameters: ApiMovieGetMovieRecommandationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MovieDTOListRequestResponse> {
+        const response = await this.apiMovieGetMovieRecommandationsIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

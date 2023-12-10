@@ -3,14 +3,13 @@ import { usePaginationController } from "@presentation/components/ui/Tables/Pagi
 import { useTableController } from "@presentation/components/ui/Tables/Table.controller";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { ShowOptions } from '../Library.types';
 import { useAppSelector } from "@application/store";
 
 export const useMovieController = () => {
     const {
         getMovies: { key: getMoviesKey, query: getMovies },
-        getFavouriteMovies: { key: getFavouriteMoviesKey, query: getFavouriteMovies },
-        deleteMovie: { key: deleteMovieKey, mutation: deleteMovie }
+        deleteMovie: { key: deleteMovieKey, mutation: deleteMovie },
+        getMoviesRecommandations: { key: getMoviesRecommandationsKey, query: getMoviesRecommandations }
     } = useMovieApi();
 
     const {
@@ -29,16 +28,16 @@ export const useMovieController = () => {
     const { mutateAsync: deleteMutation } = useMutation([deleteMovieKey], deleteMovie);
     const { mutateAsync: toggleMovieMutation } = useMutation([toggleFavouriteMovieKey], toggleFavouriteMovie);
     const remove = useCallback(
-        (id: string) => deleteMutation(id).then(() => queryClient.invalidateQueries([getMoviesKey, getFavouriteMoviesKey])),
-        [queryClient, deleteMutation, getMoviesKey, getFavouriteMoviesKey, toggleFavouriteMovie]);
+        (id: string) => deleteMutation(id).then(() => queryClient.invalidateQueries([getMoviesKey])),
+        [queryClient, deleteMutation, getMoviesKey, toggleFavouriteMovie]);
 
     const tryReload = useCallback(
         () => queryClient.invalidateQueries([getMoviesKey]),
         [queryClient, getMoviesKey]);
 
     const toggleFavourite = useCallback(
-        (movieId: string) => toggleMovieMutation(movieId).then(() => queryClient.invalidateQueries([getFavouriteMoviesKey])),
-        [queryClient, getFavouriteMoviesKey, toggleFavouriteMovie]);
+        (movieId: string) => toggleMovieMutation(movieId).then(() => queryClient.invalidateQueries([])),
+        [queryClient, toggleFavouriteMovie]);
 
     const tableController = useTableController(setPagination, dataMovies?.response?.pageSize);
 

@@ -29,13 +29,6 @@ export const TvShowPage = memo(() => {
             {tvShow.name}
           </Typography>
           <div style={{ display: "flex", height: "450px" }}>
-            <div style={{ margin: "2rem", height: "400px" }} >
-              <img
-                src={tvShow.imageUrl ?? formatMessage({ id: "global.loadingFailed" })}
-                alt={tvShow.name ?? formatMessage({ id: "global.loadingFailed" })}
-                style={{ height: '100%', width: 'auto' }}
-              />
-            </div>
             <div style={{ margin: "2rem", height: "400px", width: "100%" }}>
               <Paper elevation={3} style={{ borderRadius: '0 1rem 1rem 0' }}>
                 <div style={{ padding: '2rem' }}>
@@ -47,7 +40,7 @@ export const TvShowPage = memo(() => {
                       Release Date:
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                      {tvShow.releaseDate?.getDate() ?? formatMessage({ id: "global.loadingFailed" })}
+                      {tvShow.releaseDate?.toLocaleDateString() ?? formatMessage({ id: "global.loadingFailed" })}
                     </Typography>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '2rem' }}>

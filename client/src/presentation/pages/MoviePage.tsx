@@ -1,5 +1,7 @@
 import { useMovieApi } from "@infrastructure/apis/api-management/movie";
+import { useOwnUser } from "@infrastructure/hooks/useOwnUser";
 import { Card, CardContent, CardMedia, Grid, Paper, Rating, Typography } from "@mui/material";
+import MediaCard from "@presentation/components/library/MediaCard";
 import { Seo } from "@presentation/components/ui/Seo";
 import { useQuery } from "@tanstack/react-query";
 import { isUndefined } from "lodash";
@@ -10,14 +12,24 @@ import { useParams } from "react-router-dom";
 
 export const MoviePage = memo(() => {
   const { formatMessage } = useIntl();
+  const user = useOwnUser();
   const { guid } = useParams();
-  const { getMovie: { key: getMovieQueryKey, query: getMovie } } = useMovieApi();
-  const { data, isError, isLoading } = useQuery([getMovieQueryKey], () => getMovie(guid ?? ""));
+  const {
+    getMovie: { key: getMovieQueryKey, query: getMovie },
+    getMoviesRecommandations: { key: getMovieRecommandationsQueryKey, query: getMovieRecommandations }
+  } = useMovieApi();
+  const { data, isError, isLoading } = useQuery([getMovieQueryKey, guid], () => getMovie(guid ?? ""));
+  const {
+    data: dataMoviesRecommandations,
+    isError: isErrorMoviesRecommandations,
+    isLoading: isLoadingMoviesRecommandations
+  } = useQuery([getMovieRecommandationsQueryKey, guid], () => getMovieRecommandations(guid ?? ""));
   const movie = data?.response;
-  if (isError || isUndefined(movie)) {
+  const moviesRecommandations = dataMoviesRecommandations?.response;
+  if (isError || isUndefined(movie) || isErrorMoviesRecommandations) {
     return <>Error</>
   }
-  if (isLoading) {
+  if (isLoading || isLoadingMoviesRecommandations) {
     return <>Loading</>
   }
   return (
@@ -29,13 +41,6 @@ export const MoviePage = memo(() => {
             {movie.name}
           </Typography>
           <div style={{ display: "flex", height: "450px" }}>
-            <div style={{ margin: "2rem", height: "400px" }} >
-              <img
-                src={movie.imageUrl ?? formatMessage({ id: "global.loadingFailed" })}
-                alt={movie.name ?? formatMessage({ id: "global.loadingFailed" })}
-                style={{ height: '100%', width: 'auto' }}
-              />
-            </div>
             <div style={{ margin: "2rem", height: "400px", width: "100%" }}>
               <Paper elevation={3} style={{ borderRadius: '0 1rem 1rem 0' }}>
                 <div style={{ padding: '2rem' }}>
@@ -47,7 +52,7 @@ export const MoviePage = memo(() => {
                       Release Date:
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                      {movie.releaseDate?.getDate() ?? formatMessage({ id: "global.loadingFailed" })}
+                      {movie.releaseDate?.toLocaleDateString() ?? formatMessage({ id: "global.loadingFailed" })}
                     </Typography>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '2rem' }}>
@@ -131,6 +136,21 @@ export const MoviePage = memo(() => {
             ))}
           </div>
 
+          {moviesRecommandations && moviesRecommandations.length > 0 && <Typography variant="h4">
+            {formatMessage({ id: "globals.recommend" })}
+          </Typography>}
+          <div style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'row', gap: '30px', overflow: 'auto' }}>
+            {moviesRecommandations?.map(movieRec => {
+              const isFavourite = user?.favouriteMovies?.some(favMovie => favMovie.movieId === movieRec.id);
+              return <div style={{ width: '300px' }} key={movieRec.name}>
+                <MediaCard
+                  media={movieRec}
+                  isFavourite={isFavourite}
+                  type='movie'
+                />
+              </div>
+            })}
+          </div>
         </div>
       </WebsiteLayout>
     </Fragment >

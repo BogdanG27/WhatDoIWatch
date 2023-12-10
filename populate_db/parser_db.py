@@ -80,7 +80,7 @@ df['Id'] = [str(uuid.uuid4()) for _ in range(len(df.index))]
 df['Rating'] = df['Rating'].apply(lambda x: float(x.split('/')[0]))
 df['CreatedAt'] = datetime.today()
 df['UpdatedAt'] = datetime.today()
-df['NumberOfRatings'] = random.randint(100, 5000)
+df['NumberOfRatings'] = [random.randint(100, 5000) for _ in range(len(df.index))]
 df['Language'] = df['Language'].str.slice(0, 50)
 
 

@@ -47,5 +47,6 @@
   "globals.noAccountMessage": "Don't have an account?",
   "globals.register": "Sign Up",
   "globals.alreadyAccount": "Already have an account?",
-  "globals.seasons": "Seasons"
+  "globals.seasons": "Seasons",
+  "globals.recommend": "You might also like"
 }

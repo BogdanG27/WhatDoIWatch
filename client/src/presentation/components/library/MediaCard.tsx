@@ -28,7 +28,8 @@ const MediaCard: React.FC<MediaCardProps> = ({ media, isFavourite, type }) => {
   const { toggleFavourite: toggleFavouriteTvShow } = useTvShowController();
   const link = type === 'movie' ? AppRoute.Movie : AppRoute.TvShow;
 
-  const handleToggleFavourite = () => {
+  const handleToggleFavourite = (e: any) => {
+    e.preventDefault();
     if (!media.id)
       return;
     if (type === 'movie') {
@@ -43,28 +44,26 @@ const MediaCard: React.FC<MediaCardProps> = ({ media, isFavourite, type }) => {
   return (
     <Card style={{ height: "100%" }}>
       <Link to={link + `/${media.id}`}>
-        <CardMedia
-          component="img"
-          alt={media.name ?? formatMessage({ id: "globals.loadingFailed" })}
-          height="300"
-          image={media.imageUrl ?? errorImageUrl}
-          title={media.name ?? formatMessage({ id: "globals.loadingFailed" })}
-        />
-      </Link>
-      <CardContent>
-        <div style={{ display: 'flex', justifyContent: "space-between" }}>
-          <Typography gutterBottom variant="h5" component="h2">
-            {media.name ?? formatMessage({ id: "globals.loadingFailed" })}
+        <CardContent style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', justifyContent: "space-between" }}>
+            <Typography gutterBottom variant="h5" component="h2">
+              {media.name ?? formatMessage({ id: "globals.loadingFailed" })}
+            </Typography>
+            <IconButton onClick={handleToggleFavourite} style={{ alignSelf: 'top' }}>
+              <Favorite style={{ color: color }} />
+            </IconButton>
+          </div>
+          <div style={{ flexGrow: 1 }}>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {media.description?.substring(0, 50) + "..." ?? formatMessage({ id: "globals.loadingFailed" })}
+            </Typography>
+          </div>
+          <Typography variant="h6" color="textSecondary" component="p" >
+            {`Rating: ${media.rating}/10 (${media.numberOfRatings}) ` ?? formatMessage({ id: "globals.loadingFailed" })}
           </Typography>
-          <IconButton onClick={handleToggleFavourite}>
-            <Favorite style={{ color: color }} />
-          </IconButton>
-        </div>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {media.description ?? formatMessage({ id: "globals.loadingFailed" })}
-        </Typography>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Link>
+    </Card >
   )
 }
 

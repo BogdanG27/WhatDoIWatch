@@ -4,7 +4,7 @@ import { getAuthenticationConfiguration } from "@infrastructure/utils/userUtils"
 
 const getMoviesQueryKey = "getMoviesQuery";
 const getMovieQueryKey = "getMovieQuery";
-const getFavouriteMoviesQueryKey = "getFavouriteMoviesQuery";
+const getMoviesRecommandationsQueryKey = "getMoviesRecommandationsQuery";
 const addMovieMutationKey = "addMovieMutation";
 const deleteMovieMutationKey = "deleteMovieMutation";
 const updateMovieMutationKey = "updateMovieMutation";
@@ -14,7 +14,7 @@ export const useMovieApi = () => {
     const config = getAuthenticationConfiguration(token);
 
     const getMovies = (page: ApiMovieGetPageGetRequest) => new MovieApi(config).apiMovieGetPageGet(page);
-    const getMoviesFavourites = (page: ApiMovieGetPageGetRequest) => new MovieApi(config).apiMovieGetPageFavouritesGet(page);
+    const getMoviesRecommandations = (id: string) => new MovieApi(config).apiMovieGetMovieRecommandationsIdGet({ id });
     const getMovie = (id: string) => new MovieApi(config).apiMovieGetByIdIdGet({ id });
     const addMovie = (movie: MovieAddDTO) => new MovieApi(config).apiMovieAddPost({ movieAddDTO: movie });
     const deleteMovie = (id: string) => new MovieApi(config).apiMovieDeleteIdDelete({ id });
@@ -25,9 +25,9 @@ export const useMovieApi = () => {
             key: getMoviesQueryKey,
             query: getMovies
         },
-        getFavouriteMovies: {
-            key: getFavouriteMoviesQueryKey,
-            query: getMoviesFavourites
+        getMoviesRecommandations: {
+            key: getMoviesRecommandationsQueryKey,
+            query: getMoviesRecommandations
         },
         getMovie: {
             key: getMovieQueryKey,

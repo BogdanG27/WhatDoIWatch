@@ -62,7 +62,8 @@ public sealed class MovieProjectionSpec : BaseSpec<MovieProjectionSpec, Movie, M
         Query
             .Include(e => e.Actors)
             .Include(e => e.StaffMembers)
-            .Where(e => EF.Functions.ILike(e.Name, searchExpr));
+            .Where(e => EF.Functions.ILike(e.Name, searchExpr))
+            .OrderByDescending(e => e.Rating);
     }
 
     public MovieProjectionSpec(MovieDTO movie, UserDTO? user)
@@ -70,7 +71,7 @@ public sealed class MovieProjectionSpec : BaseSpec<MovieProjectionSpec, Movie, M
         Query
             .Include(e => e.Actors)
             .Include(e => e.StaffMembers)
-            .Where(e => EF.Functions.ILike(e.Genre, movie.Genre))
+            .Where(e => EF.Functions.ILike(e.Genre, movie.Genre) && !EF.Functions.Like(e.Id.ToString(), movie.Id.ToString()))
             .OrderByDescending(e => e.Rating)
             .Take(10);
     }

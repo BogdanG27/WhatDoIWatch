@@ -9,7 +9,6 @@ import { useAppSelector } from "@application/store";
 export const useTvShowController = () => {
     const {
         getTvShows: { key: getTvShowsKey, query: getTvShows },
-        getFavouriteTvShows: { key: getFavouriteTvShowsKey, query: getFavouriteTvShows },
         deleteTvShow: { key: deleteTvShowKey, mutation: deleteTvShow }
     } = useTvShowApi();
 
@@ -29,16 +28,16 @@ export const useTvShowController = () => {
     const { mutateAsync: deleteMutation } = useMutation([deleteTvShowKey], deleteTvShow);
     const { mutateAsync: toggleTvShowMutation } = useMutation([toggleFavouriteTvShowKey], toggleFavouriteTvShow);
     const remove = useCallback(
-        (id: string) => deleteMutation(id).then(() => queryClient.invalidateQueries([getTvShowsKey, getFavouriteTvShowsKey])),
-        [queryClient, deleteMutation, getTvShowsKey, getFavouriteTvShowsKey, toggleFavouriteTvShow]);
+        (id: string) => deleteMutation(id).then(() => queryClient.invalidateQueries([getTvShowsKey])),
+        [queryClient, deleteMutation, getTvShowsKey, toggleFavouriteTvShow]);
 
     const tryReload = useCallback(
         () => queryClient.invalidateQueries([getTvShowsKey]),
         [queryClient, getTvShowsKey]);
 
     const toggleFavourite = useCallback(
-        (tvShowId: string) => toggleTvShowMutation(tvShowId).then(() => queryClient.invalidateQueries([getFavouriteTvShowsKey])),
-        [queryClient, getFavouriteTvShowsKey, toggleFavouriteTvShow]);
+        (tvShowId: string) => toggleTvShowMutation(tvShowId).then(() => queryClient.invalidateQueries([])),
+        [queryClient, toggleFavouriteTvShow]);
 
     const tableController = useTableController(setPagination, dataTvShows?.response?.pageSize);
 

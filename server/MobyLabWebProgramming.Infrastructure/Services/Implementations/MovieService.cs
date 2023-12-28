@@ -150,6 +150,7 @@ public class MovieService : IMovieService
             entity.NumberOfRatings = movie.NumberOfRatings ?? entity.NumberOfRatings;
             entity.StaffMembers = movie.StaffMembersIds == null ? entity.StaffMembers : StaffMembers;
             entity.Actors = movie.ActorsIds == null ? entity.Actors : Actors;
+            entity.Accessed = movie.Accessed ?? entity.Accessed;
 
             await _repository.UpdateAsync(entity, cancellationToken);
         }
@@ -168,7 +169,8 @@ public class MovieService : IMovieService
         return ServiceResponse.ForSuccess();
     }
 
-    public async Task<ServiceResponse<List<MovieDTO>>> GetMovieRecommandations(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse<List<MovieDTO>>> GetMovieRecommandations(Guid id,
+        UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
     {
         var movie = await _repository.GetAsync(new MovieProjectionSpec(id), cancellationToken);
 

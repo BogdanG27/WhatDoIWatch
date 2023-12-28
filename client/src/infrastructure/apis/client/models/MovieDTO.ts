@@ -104,6 +104,12 @@ export interface MovieDTO {
      * @memberof MovieDTO
      */
     staffMembers?: Array<StaffDTO> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof MovieDTO
+     */
+    accessed?: number;
 }
 
 /**
@@ -137,6 +143,7 @@ export function MovieDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'duration': !exists(json, 'duration') ? undefined : json['duration'],
         'actors': !exists(json, 'actors') ? undefined : (json['actors'] === null ? null : (json['actors'] as Array<any>).map(ActorDTOFromJSON)),
         'staffMembers': !exists(json, 'staffMembers') ? undefined : (json['staffMembers'] === null ? null : (json['staffMembers'] as Array<any>).map(StaffDTOFromJSON)),
+        'accessed': !exists(json, 'accessed') ? undefined : json['accessed'],
     };
 }
 
@@ -161,6 +168,7 @@ export function MovieDTOToJSON(value?: MovieDTO | null): any {
         'duration': value.duration,
         'actors': value.actors === undefined ? undefined : (value.actors === null ? null : (value.actors as Array<any>).map(ActorDTOToJSON)),
         'staffMembers': value.staffMembers === undefined ? undefined : (value.staffMembers === null ? null : (value.staffMembers as Array<any>).map(StaffDTOToJSON)),
+        'accessed': value.accessed,
     };
 }
 

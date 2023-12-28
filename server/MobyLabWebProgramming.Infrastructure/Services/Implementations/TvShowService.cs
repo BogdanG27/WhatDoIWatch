@@ -91,6 +91,7 @@ public class TvShowService : ITvShowService
                 await UpdateTvShow(new TvShowUpdateDTO
                 (
                     tvShowAdded.Id,
+                    tvShowAdded.Accessed,
                     tvShow.Seasons
                 ), requestingUser, cancellationToken);
             }

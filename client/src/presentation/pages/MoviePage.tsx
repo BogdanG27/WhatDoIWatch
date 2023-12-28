@@ -1,12 +1,13 @@
 import { useMovieApi } from "@infrastructure/apis/api-management/movie";
+import { MovieUpdateDTO } from "@infrastructure/apis/client";
 import { useOwnUser } from "@infrastructure/hooks/useOwnUser";
 import { Card, CardContent, CardMedia, Grid, Paper, Rating, Typography } from "@mui/material";
 import MediaCard from "@presentation/components/library/MediaCard";
 import { Seo } from "@presentation/components/ui/Seo";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { isUndefined } from "lodash";
 import { WebsiteLayout } from "presentation/layouts/WebsiteLayout";
-import { Fragment, memo } from "react";
+import { Fragment, memo, useEffect } from "react";
 import { useIntl } from "react-intl";
 import { useParams } from "react-router-dom";
 
@@ -16,7 +17,7 @@ export const MoviePage = memo(() => {
   const { guid } = useParams();
   const {
     getMovie: { key: getMovieQueryKey, query: getMovie },
-    getMoviesRecommandations: { key: getMovieRecommandationsQueryKey, query: getMovieRecommandations }
+    getMoviesRecommandations: { key: getMovieRecommandationsQueryKey, query: getMovieRecommandations },
   } = useMovieApi();
   const { data, isError, isLoading } = useQuery([getMovieQueryKey, guid], () => getMovie(guid ?? ""));
   const {
@@ -32,6 +33,7 @@ export const MoviePage = memo(() => {
   if (isLoading || isLoadingMoviesRecommandations) {
     return <>Loading</>
   }
+
   return (
     <Fragment>
       <Seo title="MobyLab Web App | Home" />

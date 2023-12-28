@@ -14,4 +14,5 @@ public class MovieDTO
     public string Duration { get; set; } = default!;
     public ICollection<ActorDTO> Actors { get; set; } = default!;
     public ICollection<StaffDTO> StaffMembers { get; set; } = default!;
+    public int Accessed { get; set; } = default;
 }

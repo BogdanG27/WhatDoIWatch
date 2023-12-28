@@ -14,4 +14,5 @@ public class TvShowDTO
     public ICollection<ActorDTO> Actors { get; set; } = default!;
     public ICollection<StaffDTO> StaffMembers { get; set; } = default!;
     public ICollection<SeasonDTO> Seasons { get; set; } = default!;
+    public int Accessed { get; set; } = default;
 }

@@ -25,7 +25,7 @@ export const MoviesAll = ({ movies, user }: MoviesTabProps) => {
 
 export const MoviesFavourite = ({ movies, user }: MoviesTabProps) => {
   return <>
-    {movies?.filter(movie => user?.favouriteMovies?.some(favMovie => favMovie.movieId === movie.id)).map(movie => <Grid key={movie.id} item xs={12} sm={6} md={4}>
+    {movies?.map(movie => <Grid key={movie.id} item xs={12} sm={6} md={4}>
       <MediaCard
         media={movie}
         isFavourite={true}
@@ -39,17 +39,18 @@ export const MoviesTab = ({ show }: { show: ShowOptions }) => {
   const { formatMessage } = useIntl();
   const user = useOwnUser();
   const { handleChangePage, handleChangePageSize, movies, tryReload, labelDisplay, remove, toggleFavourite } = useMovieController();
+  const moviesFav = movies?.data?.filter(movie => user?.favouriteMovies?.some(favMovie => favMovie.movieId === movie.id));
   return (<>
     <Grid container spacing={2}>
       {!isUndefined(movies) && <>
         {show === 'all' && <MoviesAll movies={movies?.data} user={user} />}
-        {show === 'favourites' && <MoviesFavourite movies={movies?.data} user={user} />}
+        {show === 'favourites' && <MoviesFavourite movies={moviesFav} user={user} />}
       </>}
     </Grid>
     {!isUndefined(movies) && !isUndefined(movies?.totalCount) && !isUndefined(movies?.page) && !isUndefined(movies?.pageSize) &&
       <TablePagination
         component="div"
-        count={movies.totalCount}
+        count={(show === 'favourites' && !isUndefined(moviesFav)) ? moviesFav?.length : movies.totalCount}
         page={movies.totalCount !== 0 ? movies.page - 1 : 0}
         onPageChange={handleChangePage}
         rowsPerPage={movies.pageSize}

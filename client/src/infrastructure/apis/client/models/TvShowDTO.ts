@@ -110,6 +110,12 @@ export interface TvShowDTO {
      * @memberof TvShowDTO
      */
     seasons?: Array<SeasonDTO> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof TvShowDTO
+     */
+    accessed?: number;
 }
 
 /**
@@ -143,6 +149,7 @@ export function TvShowDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'actors': !exists(json, 'actors') ? undefined : (json['actors'] === null ? null : (json['actors'] as Array<any>).map(ActorDTOFromJSON)),
         'staffMembers': !exists(json, 'staffMembers') ? undefined : (json['staffMembers'] === null ? null : (json['staffMembers'] as Array<any>).map(StaffDTOFromJSON)),
         'seasons': !exists(json, 'seasons') ? undefined : (json['seasons'] === null ? null : (json['seasons'] as Array<any>).map(SeasonDTOFromJSON)),
+        'accessed': !exists(json, 'accessed') ? undefined : json['accessed'],
     };
 }
 
@@ -167,6 +174,7 @@ export function TvShowDTOToJSON(value?: TvShowDTO | null): any {
         'actors': value.actors === undefined ? undefined : (value.actors === null ? null : (value.actors as Array<any>).map(ActorDTOToJSON)),
         'staffMembers': value.staffMembers === undefined ? undefined : (value.staffMembers === null ? null : (value.staffMembers as Array<any>).map(StaffDTOToJSON)),
         'seasons': value.seasons === undefined ? undefined : (value.seasons === null ? null : (value.seasons as Array<any>).map(SeasonDTOToJSON)),
+        'accessed': value.accessed,
     };
 }
 

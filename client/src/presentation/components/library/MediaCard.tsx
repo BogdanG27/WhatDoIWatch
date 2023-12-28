@@ -6,10 +6,12 @@ import { Link } from 'react-router-dom'
 import { AppRoute } from 'routes'
 import { Media } from './Library.types'
 import { useIntl } from 'react-intl'
-import { useUserApi } from '@infrastructure/apis/api-management'
+import { useMovieApi, useTvShowApi, useUserApi } from '@infrastructure/apis/api-management'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMovieController } from './Movies/Movies.controller'
 import { useTvShowController } from './TvShows/TvShow.controller'
+import { MovieUpdateDTO } from '@infrastructure/apis/client'
+import { isUndefined } from 'lodash'
 
 interface MediaCardProps {
   media: Media,
@@ -21,6 +23,17 @@ const MediaCard: React.FC<MediaCardProps> = ({ media, isFavourite, type }) => {
   const [favourite, setFavourite] = useState(isFavourite)
   const { formatMessage } = useIntl();
   const queryClient = useQueryClient();
+
+  const {
+    updateMovie: { key: updateMovieMutationKey, mutation: updateMovie }
+  } = useMovieApi();
+  const {
+    updateTvShow: {
+      key: updateTvShowMutationKey,
+      mutation: updateTvShow
+    } } = useTvShowApi();
+
+  const { mutateAsync: updateMovieAsync, status } = useMutation([updateMovieMutationKey], updateMovie);
 
   const color = favourite ? "red" : "white";
 
@@ -39,11 +52,18 @@ const MediaCard: React.FC<MediaCardProps> = ({ media, isFavourite, type }) => {
       toggleFavouriteTvShow(media.id);
       setFavourite(prevFavourite => !prevFavourite);
     }
+    e.StopPropagation();
   }
 
   return (
     <Card style={{ height: "100%" }}>
-      <Link to={link + `/${media.id}`}>
+      <Link to={link + `/${media.id}`} onClick={() => {
+        const movieUpdateDto: MovieUpdateDTO = {
+          ...media,
+          accessed: isUndefined(media.accessed) ? 1 : (media.accessed + 1)
+        }
+        updateMovieAsync(movieUpdateDto)
+      }}>
         <CardContent style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: "space-between" }}>
             <Typography gutterBottom variant="h5" component="h2">

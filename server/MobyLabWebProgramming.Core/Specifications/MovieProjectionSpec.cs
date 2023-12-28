@@ -20,6 +20,7 @@ public sealed class MovieProjectionSpec : BaseSpec<MovieProjectionSpec, Movie, M
         NumberOfRatings = e.NumberOfRatings,
         Rating = e.Rating,
         ReleaseDate = e.ReleaseDate,
+        Accessed = e.Accessed,
         Actors = e.Actors.Select(a => new ActorDTO
         {
             Id = a.Id,
@@ -42,6 +43,8 @@ public sealed class MovieProjectionSpec : BaseSpec<MovieProjectionSpec, Movie, M
 
     public MovieProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
     {
+        Query
+            .OrderByDescending(e => e.Rating);
     }
 
     public MovieProjectionSpec(Guid id) : base(id)
@@ -54,6 +57,10 @@ public sealed class MovieProjectionSpec : BaseSpec<MovieProjectionSpec, Movie, M
 
         if (search == null)
         {
+            Query
+            .Include(e => e.Actors)
+            .Include(e => e.StaffMembers)
+            .OrderByDescending(e => e.Rating);
             return;
         }
 
@@ -68,11 +75,12 @@ public sealed class MovieProjectionSpec : BaseSpec<MovieProjectionSpec, Movie, M
 
     public MovieProjectionSpec(MovieDTO movie, UserDTO? user)
     {
+        string genre = $"%{String.Concat(movie.Genre.Where(c => !Char.IsWhiteSpace(c))).Split(',')[0].Replace(" ", "%")}%";
         Query
             .Include(e => e.Actors)
             .Include(e => e.StaffMembers)
-            .Where(e => EF.Functions.ILike(e.Genre, movie.Genre) && !EF.Functions.Like(e.Id.ToString(), movie.Id.ToString()))
-            .OrderByDescending(e => e.Rating)
+            .Where(e => EF.Functions.ILike(e.Genre, genre) && !EF.Functions.Like(e.Id.ToString(), movie.Id.ToString()))
+            .OrderByDescending(e => e.Accessed).ThenBy(e => e.Rating)
             .Take(10);
     }
 }

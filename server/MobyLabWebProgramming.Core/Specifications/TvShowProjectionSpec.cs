@@ -19,6 +19,7 @@ public sealed class TvShowProjectionSpec : BaseSpec<TvShowProjectionSpec, TvShow
         NumberOfRatings = e.NumberOfRatings,
         Rating = e.Rating,
         ReleaseDate = e.ReleaseDate,
+        Accessed = e.Accessed,
         Actors = e.Actors.Select(a => new ActorDTO
         {
             Id = a.Id,

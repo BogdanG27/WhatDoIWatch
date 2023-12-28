@@ -34,6 +34,12 @@ export interface TvShowUpdateDTO {
     id?: string;
     /**
      * 
+     * @type {number}
+     * @memberof TvShowUpdateDTO
+     */
+    accessed?: number | null;
+    /**
+     * 
      * @type {Array<SeasonAddSimpleDTO>}
      * @memberof TvShowUpdateDTO
      */
@@ -120,6 +126,7 @@ export function TvShowUpdateDTOFromJSONTyped(json: any, ignoreDiscriminator: boo
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'accessed': !exists(json, 'accessed') ? undefined : json['accessed'],
         'seasons': !exists(json, 'seasons') ? undefined : (json['seasons'] === null ? null : (json['seasons'] as Array<any>).map(SeasonAddSimpleDTOFromJSON)),
         'name': !exists(json, 'name') ? undefined : json['name'],
         'description': !exists(json, 'description') ? undefined : json['description'],
@@ -144,6 +151,7 @@ export function TvShowUpdateDTOToJSON(value?: TvShowUpdateDTO | null): any {
     return {
         
         'id': value.id,
+        'accessed': value.accessed,
         'seasons': value.seasons === undefined ? undefined : (value.seasons === null ? null : (value.seasons as Array<any>).map(SeasonAddSimpleDTOToJSON)),
         'name': value.name,
         'description': value.description,

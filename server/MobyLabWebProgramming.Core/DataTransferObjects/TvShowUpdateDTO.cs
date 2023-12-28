@@ -2,6 +2,7 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects;
 
 public record TvShowUpdateDTO(
     Guid Id,
+    int? Accessed,
     ICollection<SeasonAddSimpleDTO>? Seasons = null,
     string? Name = null,
     string? Description = null,

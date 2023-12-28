@@ -4,7 +4,6 @@ import { getAuthenticationConfiguration } from "@infrastructure/utils/userUtils"
 
 const getTvShowsQueryKey = "getTvShowsQuery";
 const getTvShowQueryKey = "getTvShowQuery";
-const getFavouriteTvShowsQueryKey = "getFavouriteTvShowsQuery";
 const addTvShowMutationKey = "addTvShowMutation";
 const deleteTvShowMutationKey = "deleteTvShowMutation";
 const updateTvShowMutationKey = "updateTvShowMutation";
@@ -14,7 +13,6 @@ export const useTvShowApi = () => {
     const config = getAuthenticationConfiguration(token);
 
     const getTvShows = (page: ApiTvShowGetPageGetRequest) => new TvShowApi(config).apiTvShowGetPageGet(page);
-    const getTvShowsFavourites = (page: ApiTvShowGetPageGetRequest) => new TvShowApi(config).apiTvShowGetPageFavouritesGet(page);
     const getTvShow = (id: string) => new TvShowApi(config).apiTvShowGetByIdIdGet({ id });
     const addTvShow = (tvShow: TvShowAddDTO) => new TvShowApi(config).apiTvShowAddPost({ tvShowAddDTO: tvShow });
     const deleteTvShow = (id: string) => new TvShowApi(config).apiTvShowDeleteIdDelete({ id });
@@ -24,10 +22,6 @@ export const useTvShowApi = () => {
         getTvShows: {
             key: getTvShowsQueryKey,
             query: getTvShows
-        },
-        getFavouriteTvShows: {
-            key: getFavouriteTvShowsQueryKey,
-            query: getTvShowsFavourites
         },
         getTvShow: {
             key: getTvShowQueryKey,

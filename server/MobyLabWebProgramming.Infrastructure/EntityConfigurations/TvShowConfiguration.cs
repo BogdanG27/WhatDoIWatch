@@ -16,6 +16,9 @@ public class TvShowConfiguration : IEntityTypeConfiguration<TvShow>
             .HasMaxLength(500)
             .IsRequired();
 
+        builder.Property(m => m.Accessed)
+            .HasDefaultValue(0);
+
         builder.Property(m => m.ReleaseDate)
             .IsRequired();
 

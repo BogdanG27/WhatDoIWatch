@@ -27,6 +27,12 @@ export interface MovieUpdateDTO {
     id?: string;
     /**
      * 
+     * @type {number}
+     * @memberof MovieUpdateDTO
+     */
+    accessed?: number | null;
+    /**
+     * 
      * @type {string}
      * @memberof MovieUpdateDTO
      */
@@ -113,6 +119,7 @@ export function MovieUpdateDTOFromJSONTyped(json: any, ignoreDiscriminator: bool
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'accessed': !exists(json, 'accessed') ? undefined : json['accessed'],
         'name': !exists(json, 'name') ? undefined : json['name'],
         'description': !exists(json, 'description') ? undefined : json['description'],
         'releaseDate': !exists(json, 'releaseDate') ? undefined : (json['releaseDate'] === null ? null : new Date(json['releaseDate'])),
@@ -137,6 +144,7 @@ export function MovieUpdateDTOToJSON(value?: MovieUpdateDTO | null): any {
     return {
         
         'id': value.id,
+        'accessed': value.accessed,
         'name': value.name,
         'description': value.description,
         'releaseDate': value.releaseDate === undefined ? undefined : (value.releaseDate === null ? null : value.releaseDate.toISOString()),

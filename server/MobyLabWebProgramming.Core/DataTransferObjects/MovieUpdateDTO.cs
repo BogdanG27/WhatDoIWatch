@@ -2,6 +2,7 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects;
 
 public record MovieUpdateDTO(
     Guid Id,
+    int? Accessed,
     string? Name = null,
     string? Description = null,
     DateTime? ReleaseDate = null,

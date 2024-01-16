@@ -10,4 +10,9 @@ public sealed class UserMovieSpec : BaseSpec<UserMovieSpec, UserMovie>
             .Include(e => e.Movie)
             .Where(e => e.UserId == userId && e.MovieId == movieId);
     }
+
+    public UserMovieSpec()
+    {
+        
+    }
 }

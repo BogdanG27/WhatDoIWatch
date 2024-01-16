@@ -183,4 +183,26 @@ public class MovieService : IMovieService
 
         return ServiceResponse<List<MovieDTO>>.ForSuccess(result);
     }
+
+    public async Task<ServiceResponse<List<MovieDTO>>> GetFavouriteMovies(UserDTO? requestingUser = default, CancellationToken cancellationToken = default) {
+        
+        var userMovies = await _repository.ListAsync(new UserMovieSpec(), cancellationToken);
+
+        var frequency = new Dictionary<Guid, int>();
+
+        foreach (var userMovie in userMovies) {
+            if (frequency.ContainsKey(userMovie.MovieId)) {
+                frequency[userMovie.MovieId] += 1;
+            }
+            else {
+                frequency[userMovie.MovieId] = 1;
+            }  
+        }
+        
+        var sortedDict = from entry in frequency orderby entry.Value descending select entry.Key;
+        
+        var result = await _repository.ListAsync(new MoviesFavouriteSpec(sortedDict.Take(3).ToList()), cancellationToken);
+        
+        return ServiceResponse<List<MovieDTO>>.ForSuccess(result);
+    }
 }

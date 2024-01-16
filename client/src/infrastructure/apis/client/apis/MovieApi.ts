@@ -165,6 +165,34 @@ export class MovieApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiMovieGetFavouriteMoviesGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MovieDTOListRequestResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/api/Movie/GetFavouriteMovies`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MovieDTOListRequestResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiMovieGetFavouriteMoviesGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MovieDTOListRequestResponse> {
+        const response = await this.apiMovieGetFavouriteMoviesGetRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiMovieGetMovieRecommandationsIdGetRaw(requestParameters: ApiMovieGetMovieRecommandationsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MovieDTOListRequestResponse>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiMovieGetMovieRecommandationsIdGet.');

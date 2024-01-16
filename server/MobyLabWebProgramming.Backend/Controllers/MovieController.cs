@@ -74,4 +74,15 @@ public class MovieController : AuthorizedController
             this.FromServiceResponse(await _movieService.GetMovieRecommandations(id, currentUser.Result)) :
             this.ErrorMessageResult<List<MovieDTO>>(currentUser.Error);
     }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<RequestResponse<List<MovieDTO>>>> GetFavouriteMovies()
+    {
+        var currentUser = await GetCurrentUser();
+
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _movieService.GetFavouriteMovies(currentUser.Result)) :
+            this.ErrorMessageResult<List<MovieDTO>>(currentUser.Error);
+    }
 }

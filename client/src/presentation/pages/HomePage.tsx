@@ -18,8 +18,8 @@ const pageSizeTvShows = 1;
 
 export const HomePage = memo(() => {
   const { formatMessage } = useIntl();
-  const { getMovies: { key: queryKeyGetMovies, query: getMovies } } = useMovieApi();
-  const { data: moviesData, isError: moviesIsError, isLoading: moviesIsLoading } = useQuery([queryKeyGetMovies, page, pageSizeMovies], () => getMovies({ page, pageSize: pageSizeMovies }));
+  const { getMovies: { key: queryKeyGetMovies, query: getMovies }, getFavouriteMovies: {key: queryKeyGetFavouriteMovies, query: getFavouriteMovies} } = useMovieApi();
+  const { data: moviesData, isError: moviesIsError, isLoading: moviesIsLoading } = useQuery([queryKeyGetMovies, page, pageSizeMovies], () => getFavouriteMovies());
   const { getTvShows: { key: queryKeyGetTvShows, query: getTvShows } } = useTvShowApi();
   const { data: tvShowsData, isError: tvShowsIsError, isLoading: tvShowsIsLoading } = useQuery([queryKeyGetTvShows, page, pageSizeTvShows], () => getTvShows({ page, pageSize: pageSizeTvShows }));
 
@@ -56,16 +56,10 @@ export const HomePage = memo(() => {
               Featured
             </Typography>
           </Grid>
-          {moviesData?.response?.data?.map(movie => {
+          {moviesData?.response?.map(movie => {
             const isFavourite = user?.favouriteMovies?.some(favMovie => favMovie.movieId === movie.id);
             return <Grid key={movie.id} item xs={12} sm={6} md={4}>
               <MediaCard media={movie} type='movie' isFavourite={isFavourite} />
-            </Grid>
-          })}
-          {tvShowsData?.response?.data?.map(tvShow => {
-            const isFavourite = user?.favouriteTvShows?.some(favTvShow => favTvShow.tvShowId === tvShow.id);
-            return <Grid key={tvShow.id} item xs={12} sm={6} md={4}>
-              <MediaCard media={tvShow} type='tvShow' isFavourite={isFavourite} />
             </Grid>
           })}
 
